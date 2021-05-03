@@ -50,7 +50,7 @@ const entryPoint: sdk.ModuleEntryPoint = {
     // This is the name of your module which will be displayed in the sidebar
     menuText: 'Sheet2Bot',
     // When set to `true`, the name and icon of your module won't be displayed in the sidebar
-    noInterface: false,
+    noInterface: true,
     // The full name is used in other places, for example when displaying bot templates
     fullName: 'Sheet2Bot',
     // Not used anywhere, but should be a link to your website or module repository

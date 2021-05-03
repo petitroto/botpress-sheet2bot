@@ -1,13 +1,35 @@
 import React from 'react'
 
-/**
- * The lite views are meant to be lightweight. They shouldn't include heavy dependencies.
- * Common use case is to add custom components on the web chat. It's also possible to share them to other modules
- *
- * Even if you don't plan to include a lite view, you must include an empty view that returns 'null'
- */
-export class LiteView extends React.Component {
+export class AppView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.fileInput = React.createRef();
+    this.axiosConfig = {baseURL: '/api/v1/bots/___/mod/sheet2bot'}
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const file = this.fileInput.current.files[0]
+    const data = new FormData()
+    data.append('file', file)
+    this.props.bp.axios.post('/import', data, this.axiosConfig)
+  }
+
   render() {
-    return null
+    return (
+      <main>
+        <h1>Sheet2Bot</h1>
+        <section>
+          <p>Excel形式のボット定義ファイルをアップロードしてください</p>
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              <input type="file" ref={this.fileInput}/>
+            </label>
+            <button type="submit">送信</button>
+          </form>
+        </section>
+      </main>
+    );
   }
 }

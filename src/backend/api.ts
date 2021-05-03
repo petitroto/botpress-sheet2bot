@@ -1,24 +1,23 @@
 import * as sdk from 'botpress/sdk'
+import multer from 'multer'
+import path from 'path'
 
 export default async (bp: typeof sdk) => {
-  /**
-   * This is an example route to get you started.
-   * Your API will be available at `http://localhost:3000/api/v1/bots/BOT_NAME/mod/sheet2bot`
-   * Just replace BOT_NAME by your bot ID
-   */
-  const router = bp.http.createRouterForBot('sheet2bot')
 
-  // Link to access this route: http://localhost:3000/api/v1/bots/BOT_NAME/mod/sheet2bot/my-first-route
-  router.get('/my-first-route', async (req, res) => {
-    // Since the bot ID is required to access your module,
-    const botId = req.params.botId
-
-    /**
-     * This is how you would get your module configuration for a specific bot.
-     * If there is no configuration for the bot, global config will be used. Check `config.ts` to set your configurations
-     */
-    const config = await bp.config.getModuleConfigForBot('sheet2bot', botId)
-
-    res.sendStatus(200)
+  const diskStorage = multer.diskStorage({
+    destination: '/tmp/botpress-sheet2bot-upload',
+    filename(req, file, cb) {
+      const ext = path.extname(file.originalname)
+      cb(undefined, `${new Date().getTime()}${ext}`)
+    }
   })
+  const upload = multer({storage: diskStorage})
+
+  const router = bp.http.createRouterForBot('sheet2bot')
+  router.post(
+    '/import',
+    upload.single('file'),
+    async (req, res) => {
+      return res.sendStatus(200)
+    })
 }
