@@ -8,6 +8,7 @@ import load from './load'
 import {Qna} from './qna'
 import {IntentQna} from './typings'
 
+const mimeTypeOfXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const destBasePath = '/tmp/botpress-sheet2bot'
 
 export default async (bp: typeof sdk) => {
@@ -28,15 +29,28 @@ export default async (bp: typeof sdk) => {
     '/import',
     upload.single('file'),
     async (req, res) => {
-      // インポート先のBotId
-      const botId = req.body.botId
-      if (!botId) {
-        return res.status(400).json({botId, message: 'botId is required'})
-      }
       const allowOverwrite = req.body.allowOverwrite === 'true'
+      const botId = req.body.botId
+
+      if (!botId) {
+        return res.status(400).json({botId, message: 'botId is missing'})
+      }
+
+      const existingBot = await bp.bots.getBotById(botId)
+      if (!allowOverwrite && existingBot) {
+        return res.status(409).json({botId, message: `${botId} already exists`})
+      }
+
+      if (req.file.mimetype !== mimeTypeOfXlsx) {
+        return res.status(415).json({botId, message: `${req.file.originalname} is not xlsx`})
+      }
 
       // KBファイルの読み込み
       const intentQnas: IntentQna[] = load(bp, req.file.path)
+
+      if (!intentQnas || intentQnas.length === 0) {
+        return res.status(406).json({botId, message: `${req.file.originalname} is invalid format`})
+      }
 
       // KBファイルの内容から、Botpressのデータ構造へ組み換え
       const qnas = intentQnas
@@ -51,7 +65,7 @@ export default async (bp: typeof sdk) => {
 
       // ボットアーカイブを生成
       const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
-      const archive = await buildArchive(pathToArchive, template, qnas, intents)
+      const archive: Buffer = await buildArchive(pathToArchive, template, qnas, intents)
 
       try {
         await bp.bots.importBot(botId, archive, 'default', allowOverwrite)

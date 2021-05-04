@@ -65,7 +65,19 @@ export class AppView extends React.Component<Props, State> {
       const res = await this.props.bp.axios.post('/import', form, this.axiosConfig)
       this.setState({message: `BotId「${res.data.botId}」のインポートに成功しました`})
     } catch (err) {
-      this.setState({message: 'インポートに失敗しました'})
+      if (err.response && err.response.status === 400) {
+        this.setState({message: '必要なパラメータが不足しています'})
+      } else if (err.response && err.response.status === 401) {
+        this.setState({message: 'Botpressの認証が無効です。もう一度ログインしてから、このページをリロードしてください'})
+      } else if (err.response && err.response.status === 406) {
+        this.setState({message: 'このExcelファイルは、Botとしてインポート可能な形式ではありません。サンプルフォーマットに従って作成したファイルをインポートしてください'})
+      } else if (err.response && err.response.status === 409) {
+        this.setState({message: `botId「${this.state.botId}」は既に使われています。上書きする場合は allowOverwrite にチェックをいれてください。（ただし、IDが指定されていないコンテンツがシートに含まれる場合、上書きするとコンテンツの重複が発生します）`})
+      } else if (err.response && err.response.status === 415) {
+        this.setState({message: 'このファイルはxlsx形式ではありません'})
+      } else {
+        this.setState({message: 'インポートに失敗しました'})
+      }
     }
   }
 
