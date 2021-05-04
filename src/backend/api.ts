@@ -42,9 +42,11 @@ export default async (bp: typeof sdk) => {
       // テンプレートの読み込み
       const template = getTemplate()
 
-      // ボットアーカイブを書き出し
-      const archiveName = `bot-from-sheet-${Date.now()}`
-      buildArchive(`${destBasePath}/archive`, archiveName, template, qnas, intents)
+      // ボットアーカイブを生成
+      const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
+      const archive = await buildArchive(pathToArchive, template, qnas, intents)
+
+      await bp.bots.importBot('hoge', archive, 'default', false)
 
       return res.sendStatus(200)
     })
