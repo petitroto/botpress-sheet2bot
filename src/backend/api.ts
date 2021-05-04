@@ -33,6 +33,7 @@ export default async (bp: typeof sdk) => {
       if (!botId) {
         return res.status(400).send('botId is required')
       }
+      const allowOverwrite = req.body.allowOverwrite === 'true'
 
       // KBファイルの読み込み
       const intentQnas: IntentQna[] = load(bp, req.file.path)
@@ -53,7 +54,7 @@ export default async (bp: typeof sdk) => {
       const archive = await buildArchive(pathToArchive, template, qnas, intents)
 
       try {
-        await bp.bots.importBot(botId, archive, 'default', false)
+        await bp.bots.importBot(botId, archive, 'default', allowOverwrite)
       } catch (e) {
         return res.sendStatus(500)
       }

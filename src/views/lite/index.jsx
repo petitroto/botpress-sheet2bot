@@ -3,7 +3,7 @@ import React from 'react'
 export class AppView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {botId: ''};
+    this.state = {botId: '', allowOverwrite: false};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
     this.axiosConfig = {
@@ -14,6 +14,7 @@ export class AppView extends React.Component {
     }
 
     this.handleBotIdChange = this.handleBotIdChange.bind(this);
+    this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -21,12 +22,17 @@ export class AppView extends React.Component {
     this.setState({botId: event.target.value});
   }
 
+  handleAllowOverwriteChange(event) {
+    this.setState({allowOverwrite: event.target.checked});
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const file = this.fileInput.current.files[0]
     const form = new FormData()
-    form.append('botId', this.state.botId)
     form.append('file', file)
+    form.append('botId', this.state.botId)
+    form.append('allowOverwrite', this.state.allowOverwrite)
     this.props.bp.axios.post('/import', form, this.axiosConfig)
   }
 
@@ -38,10 +44,28 @@ export class AppView extends React.Component {
           <p>ExcelファイルをインポートしてBotを作成できます。</p>
           <form onSubmit={this.handleSubmit}>
             <p>
-              BotId: <input type="text" value={this.state.botId} onChange={this.handleBotIdChange}/>
+              <label>
+                BotSheet:
+                <input type="file"
+                       ref={this.fileInput}/>
+              </label>
             </p>
             <p>
-              <label>BotSheet: <input type="file" ref={this.fileInput}/> </label>
+              <label>
+                BotId:
+                <input type="text"
+                       value={this.state.botId}
+                       onChange={this.handleBotIdChange}/>
+              </label>
+            </p>
+            <p>
+              <label>
+                allowOverwrite:
+                <input type="checkbox"
+                       name="allowOverwrite"
+                       checked={this.state.allowOverwrite}
+                       onChange={this.handleAllowOverwriteChange}/>
+              </label>
             </p>
             <p>
               <button type="submit">インポート</button>
