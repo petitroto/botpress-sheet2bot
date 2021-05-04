@@ -2,8 +2,10 @@ import {AxiosInstance} from 'axios'
 import React from 'react'
 
 interface State {
+  filename: string
   botId: string
   allowOverwrite: boolean
+  message: string
 }
 
 interface Props {
@@ -17,8 +19,10 @@ export class AppView extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
+      filename: '',
       botId: '',
-      allowOverwrite: false
+      allowOverwrite: false,
+      message: ''
     }
     this.fileInput = React.createRef()
     this.axiosConfig = {
@@ -28,9 +32,18 @@ export class AppView extends React.Component<Props, State> {
       }
     }
 
+    this.handleFileChange = this.handleFileChange.bind(this)
     this.handleBotIdChange = this.handleBotIdChange.bind(this)
     this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleFileChange(event) {
+    if (event.target.files.length > 0) {
+      this.setState({filename: event.target.files[0].name})
+    } else {
+      this.setState({filename: ''})
+    }
   }
 
   handleBotIdChange(event) {
@@ -48,7 +61,12 @@ export class AppView extends React.Component<Props, State> {
     form.append('file', file)
     form.append('botId', this.state.botId)
     form.append('allowOverwrite', String(this.state.allowOverwrite))
-    await this.props.bp.axios.post('/import', form, this.axiosConfig)
+    try {
+      const res = await this.props.bp.axios.post('/import', form, this.axiosConfig)
+      this.setState({message: `BotId「${res.data.botId}」のインポートに成功しました`})
+    } catch (err) {
+      this.setState({message: 'インポートに失敗しました'})
+    }
   }
 
   render() {
@@ -62,7 +80,8 @@ export class AppView extends React.Component<Props, State> {
               <label>
                 BotSheet:
                 <input type="file"
-                       ref={this.fileInput}/>
+                       ref={this.fileInput}
+                       onChange={this.handleFileChange}/>
               </label>
             </p>
             <p>
@@ -83,7 +102,13 @@ export class AppView extends React.Component<Props, State> {
               </label>
             </p>
             <p>
-              <button type="submit">インポート</button>
+              <button type="submit"
+                      disabled={!this.state.filename || !this.state.botId}>
+                インポート
+              </button>
+            </p>
+            <p>
+              {this.state.message && <span>{this.state.message}</span>}
             </p>
           </form>
         </section>

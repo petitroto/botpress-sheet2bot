@@ -31,7 +31,7 @@ export default async (bp: typeof sdk) => {
       // インポート先のBotId
       const botId = req.body.botId
       if (!botId) {
-        return res.status(400).send('botId is required')
+        return res.status(400).json({botId, message: 'botId is required'})
       }
       const allowOverwrite = req.body.allowOverwrite === 'true'
 
@@ -55,10 +55,9 @@ export default async (bp: typeof sdk) => {
 
       try {
         await bp.bots.importBot(botId, archive, 'default', allowOverwrite)
-      } catch (e) {
-        return res.sendStatus(500)
+        res.status(200).json({botId})
+      } catch (err) {
+        res.status(500).json({botId})
       }
-
-      return res.sendStatus(200)
     })
 }
