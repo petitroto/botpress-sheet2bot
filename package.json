@@ -1,15 +1,19 @@
 {
   "name": "sheet2bot",
-  "version": "1.0.0",
-  "description": "Generate bot from xlsx",
+  "fullName": "Sheet2Bot",
+  "version": "0.0.1",
+  "description": "Generate bot from xlsx: http://localhost:3000/lite/?m=sheet2bot&v=AppView",
   "private": true,
   "main": "dist/backend/index.js",
-  "author": "Botpress, Inc.",
+  "author": "Masayuki Nakamura",
   "license": "AGPL-3.0-only",
   "scripts": {
     "build": "node ../../build/module-builder/bin/entry build",
     "watch": "node ../../build/module-builder/bin/entry watch",
     "package": "node ../../build/module-builder/bin/entry package"
   },
-  "dependencies": {}
+  "dependencies": {
+    "nanoid": "^3.1.22",
+    "xlsx": "^0.16.9"
+  }
 }
