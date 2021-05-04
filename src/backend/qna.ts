@@ -39,6 +39,7 @@ class QnaData {
       ja: _.chain([...range(1, 11)])
         .map(i => record[`answer${i}`])
         .compact()
+        .map(answer => answer.replace(/\r\n/g, '\n'))
         .value()
     }
     this.questions = {
