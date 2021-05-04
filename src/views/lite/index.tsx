@@ -1,13 +1,26 @@
+import {AxiosInstance} from 'axios'
 import React from 'react'
 
-export class AppView extends React.Component {
+interface State {
+  botId: string
+  allowOverwrite: boolean
+}
+
+interface Props {
+  bp: { axios: AxiosInstance }
+}
+
+export class AppView extends React.Component<Props, State> {
+  fileInput: any
+  axiosConfig: any
+
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       botId: '',
       allowOverwrite: false
-    };
-    this.fileInput = React.createRef();
+    }
+    this.fileInput = React.createRef()
     this.axiosConfig = {
       baseURL: '/api/v1/bots/___/mod/sheet2bot',
       headers: {
@@ -15,27 +28,27 @@ export class AppView extends React.Component {
       }
     }
 
-    this.handleBotIdChange = this.handleBotIdChange.bind(this);
-    this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBotIdChange = this.handleBotIdChange.bind(this)
+    this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleBotIdChange(event) {
-    this.setState({botId: event.target.value});
+    this.setState({botId: event.target.value})
   }
 
   handleAllowOverwriteChange(event) {
-    this.setState({allowOverwrite: event.target.checked});
+    this.setState({allowOverwrite: event.target.checked})
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  async handleSubmit(event) {
+    event.preventDefault()
     const file = this.fileInput.current.files[0]
     const form = new FormData()
     form.append('file', file)
     form.append('botId', this.state.botId)
-    form.append('allowOverwrite', this.state.allowOverwrite)
-    this.props.bp.axios.post('/import', form, this.axiosConfig)
+    form.append('allowOverwrite', String(this.state.allowOverwrite))
+    await this.props.bp.axios.post('/import', form, this.axiosConfig)
   }
 
   render() {
@@ -75,6 +88,6 @@ export class AppView extends React.Component {
           </form>
         </section>
       </main>
-    );
+    )
   }
 }
