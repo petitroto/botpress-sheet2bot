@@ -74,4 +74,11 @@ export default async (bp: typeof sdk) => {
         res.status(500).json({botId})
       }
     })
+
+  const params = {
+    m: 'sheet2bot',
+    v: 'AppView'
+  }
+
+  bp.http.createShortLink('sheet2bot', `${process.EXTERNAL_URL}/lite/`, params)
 }

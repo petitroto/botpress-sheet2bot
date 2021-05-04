@@ -2,7 +2,7 @@
   "name": "sheet2bot",
   "fullName": "Sheet2Bot",
   "version": "0.0.1",
-  "description": "Generate bot from xlsx: http://localhost:3000/lite/?m=sheet2bot&v=AppView",
+  "description": "Generate bot from xlsx: http://localhost:3000/s/sheet2bot",
   "private": true,
   "main": "dist/backend/index.js",
   "author": "Masayuki Nakamura",
