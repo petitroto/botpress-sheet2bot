@@ -1,18 +1,19 @@
-import path from "path";
-import fs from "fs";
-import tar from "tar";
+/* eslint-disable @typescript-eslint/quotes */
+import fs from 'fs'
+import path from 'path'
+import stream from 'stream'
+import tar from 'tar'
 
-function buildArchive(basePath, archiveName, template, qnas, intents) {
-  const pathToArchive = path.join(basePath, archiveName);
-  makeDirs(pathToArchive);
-  exportQna(pathToArchive, qnas);
-  exportIntent(pathToArchive, intents);
-  exportFlow(pathToArchive, template);
-  exportTop(pathToArchive, template);
-  makeTarball(basePath, pathToArchive, archiveName);
+export function buildArchive(pathToArchive, template, qnas, intents): Promise<Buffer> {
+  makeDirs(pathToArchive)
+  exportQna(pathToArchive, qnas)
+  exportIntent(pathToArchive, intents)
+  exportFlow(pathToArchive, template)
+  exportTop(pathToArchive, template)
+  return makeTarball(pathToArchive)
 }
 
-function getTemplate() {
+export function getTemplate() {
   return {
     flows: {
       'main.flow.json': {
@@ -78,7 +79,7 @@ function getTemplate() {
       },
       'revisions.json': []
     }
-  };
+  }
 }
 
 function makeDirs(pathToArchive) {
@@ -90,51 +91,62 @@ function makeDirs(pathToArchive) {
     'intents',
     'flows/skills',
     'media'
-  ];
+  ]
   dirs.forEach(dir => {
-    const fullPath = path.join(pathToArchive, dir);
+    const fullPath = path.join(pathToArchive, dir)
     fs.mkdirSync(fullPath, {recursive: true})
-  });
+  })
 }
 
-function makeTarball(basePath, pathToArchive, archiveName) {
-  tar.c({
+async function makeTarball(pathToArchive): Promise<Buffer> {
+  const readStream: stream.Readable = tar.c({
     gzip: true,
-    C: pathToArchive,
-    file: path.join(basePath, `${archiveName}.tgz`),
-  }, ['.']);
+    C: pathToArchive
+  }, ['.'])
+
+  return new Promise((resolve, reject) => {
+    const buffers = []
+    readStream.on('data', data => {
+      buffers.push(data)
+    })
+    readStream.on('end', () => {
+      const result = Buffer.concat(buffers)
+      resolve(result)
+    })
+    readStream.on('error', error => {
+      reject(error)
+    })
+  })
 }
 
 function exportFlow(pathToArchive, template) {
   Object.keys(template.flows).forEach(filename => {
-    const filePath = path.join(pathToArchive, `flows/${filename}`);
-    const content = JSON.stringify(template.flows[filename], null, 2);
-    fs.writeFileSync(filePath, content);
+    const filePath = path.join(pathToArchive, `flows/${filename}`)
+    const content = JSON.stringify(template.flows[filename], null, 2)
+    fs.writeFileSync(filePath, content)
   })
 }
 
 function exportTop(pathToArchive, template) {
   Object.keys(template.top).forEach(filename => {
-    const filePath = path.join(pathToArchive, `${filename}`);
-    const content = JSON.stringify(template.top[filename], null, 2);
-    fs.writeFileSync(filePath, content);
+    const filePath = path.join(pathToArchive, `${filename}`)
+    const content = JSON.stringify(template.top[filename], null, 2)
+    fs.writeFileSync(filePath, content)
   })
 }
 
 function exportQna(pathToArchive, qnas) {
   qnas.forEach(qna => {
-    const filePath = path.join(pathToArchive, `qna/${qna.id}.json`);
-    const content = JSON.stringify(qna, null, 2);
-    fs.writeFileSync(filePath, content);
-  });
+    const filePath = path.join(pathToArchive, `qna/${qna.id}.json`)
+    const content = JSON.stringify(qna, null, 2)
+    fs.writeFileSync(filePath, content)
+  })
 }
 
 function exportIntent(pathToArchive, intents) {
   intents.forEach(intent => {
-    const filePath = path.join(pathToArchive, `intents/${intent.name}.json`);
-    const content = JSON.stringify(intent, null, 2);
-    fs.writeFileSync(filePath, content);
-  });
+    const filePath = path.join(pathToArchive, `intents/${intent.name}.json`)
+    const content = JSON.stringify(intent, null, 2)
+    fs.writeFileSync(filePath, content)
+  })
 }
-
-module.exports = {buildArchive, getTemplate};

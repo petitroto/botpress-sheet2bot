@@ -28,6 +28,12 @@ export default async (bp: typeof sdk) => {
     '/import',
     upload.single('file'),
     async (req, res) => {
+      // インポート先のBotId
+      const botId = req.body.botId
+      if (!botId) {
+        return res.status(400).send('botId is required')
+      }
+
       // KBファイルの読み込み
       const intentQnas: IntentQna[] = load(bp, req.file.path)
 
@@ -42,9 +48,15 @@ export default async (bp: typeof sdk) => {
       // テンプレートの読み込み
       const template = getTemplate()
 
-      // ボットアーカイブを書き出し
-      const archiveName = `bot-from-sheet-${Date.now()}`
-      buildArchive(`${destBasePath}/archive`, archiveName, template, qnas, intents)
+      // ボットアーカイブを生成
+      const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
+      const archive = await buildArchive(pathToArchive, template, qnas, intents)
+
+      try {
+        await bp.bots.importBot(botId, archive, 'default', false)
+      } catch (e) {
+        return res.sendStatus(500)
+      }
 
       return res.sendStatus(200)
     })
