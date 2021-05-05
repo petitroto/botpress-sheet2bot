@@ -38,18 +38,18 @@ export default async (bp: typeof sdk) => {
 
       const existingBot = await bp.bots.getBotById(botId)
       if (!allowOverwrite && existingBot) {
-        return res.status(409).json({botId, message: `${botId} already exists`})
+        return res.status(409).json({botId, message: 'Requested botId already exists'})
       }
 
       if (req.file.mimetype !== mimeTypeOfXlsx) {
-        return res.status(415).json({botId, message: `${req.file.originalname} is not xlsx`})
+        return res.status(415).json({botId, message: 'Uploaded file is not xlsx'})
       }
 
       // KBファイルの読み込み
       const intentQnas: IntentQna[] = load(bp, req.file.path)
 
       if (!intentQnas || intentQnas.length === 0) {
-        return res.status(406).json({botId, message: `${req.file.originalname} is invalid format`})
+        return res.status(406).json({botId, message: 'Uploaded file is invalid format'})
       }
 
       // KBファイルの内容から、Botpressのデータ構造へ組み換え
@@ -69,9 +69,9 @@ export default async (bp: typeof sdk) => {
 
       try {
         await bp.bots.importBot(botId, archive, 'default', allowOverwrite)
-        res.status(200).json({botId})
+        res.status(200).json({botId, message: 'Imported successfully'})
       } catch (err) {
-        res.status(500).json({botId})
+        res.status(500).json({botId, message: 'Failed to import'})
       }
     })
 

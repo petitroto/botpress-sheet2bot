@@ -1,16 +1,19 @@
 import {AxiosInstance} from 'axios'
 import React from 'react'
+import {Status} from './status'
 
 interface State {
   filename: string
   botId: string
   allowOverwrite: boolean
-  message: string
+  messageType: string
+  messageText: string
 }
 
 interface Props {
   bp: { axios: AxiosInstance }
 }
+
 
 export class AppView extends React.Component<Props, State> {
   fileInput: any
@@ -22,7 +25,8 @@ export class AppView extends React.Component<Props, State> {
       filename: '',
       botId: '',
       allowOverwrite: false,
-      message: ''
+      messageType: '',
+      messageText: ''
     }
     this.fileInput = React.createRef()
     this.axiosConfig = {
@@ -56,74 +60,92 @@ export class AppView extends React.Component<Props, State> {
 
   async handleSubmit(event) {
     event.preventDefault()
-    const file = this.fileInput.current.files[0]
+
     const form = new FormData()
+    const file = this.fileInput.current.files[0]
     form.append('file', file)
     form.append('botId', this.state.botId)
     form.append('allowOverwrite', String(this.state.allowOverwrite))
+
     try {
       const res = await this.props.bp.axios.post('/import', form, this.axiosConfig)
-      this.setState({message: `BotId「${res.data.botId}」のインポートに成功しました`})
+      const statusName = '200'
+      const {messageType, messageText} = new Status(res.data.botId).getMessage(statusName)
+      this.setState({messageType, messageText})
     } catch (err) {
-      if (err.response && err.response.status === 400) {
-        this.setState({message: '必要なパラメータが不足しています'})
-      } else if (err.response && err.response.status === 401) {
-        this.setState({message: 'Botpressの認証が無効です。もう一度ログインしてから、このページをリロードしてください'})
-      } else if (err.response && err.response.status === 406) {
-        this.setState({message: 'このExcelファイルは、Botとしてインポート可能な形式ではありません。サンプルフォーマットに従って作成したファイルをインポートしてください'})
-      } else if (err.response && err.response.status === 409) {
-        this.setState({message: `botId「${this.state.botId}」は既に使われています。上書きする場合は allowOverwrite にチェックをいれてください。（ただし、IDが指定されていないコンテンツがシートに含まれる場合、上書きするとコンテンツの重複が発生します）`})
-      } else if (err.response && err.response.status === 415) {
-        this.setState({message: 'このファイルはxlsx形式ではありません'})
-      } else {
-        this.setState({message: 'インポートに失敗しました'})
-      }
+      const statusName = err.response ? String(err.response.status) : 'Other'
+      const {messageType, messageText} = new Status(this.state.botId).getMessage(statusName)
+      this.setState({messageType, messageText})
     }
   }
 
   render() {
     return (
-      <main>
-        <h1>Sheet2Bot</h1>
+      <main className="container">
+        <header className="page-header">
+          <h1>Sheet2Bot</h1>
+        </header>
         <section>
-          <p>ExcelファイルをインポートしてBotを作成できます。</p>
+          <p>
+            ボットシートをインポートしてBotを作成できます。
+          </p>
           <form onSubmit={this.handleSubmit}>
-            <p>
+            <div className="form-group">
+              <label htmlFor="BotSheet">ボットシート <span className="text-danger">*</span></label>
+              <input type="file"
+                     id="BotSheet"
+                     ref={this.fileInput}
+                     onChange={this.handleFileChange}/>
+              <p className="help-block">ボットシートとは、Botのコンテンツを所定の形式で格納したExcelファイルです。（<a
+                href="http://localhost:3000/assets/modules/sheet2bot/botsheet-example.xlsx">サンプル</a>）</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
+              <input type="text"
+                     className="form-control"
+                     id="BotId"
+                     placeholder="yourBotId"
+                     value={this.state.botId}
+                     onChange={this.handleBotIdChange}/>
+              <p className="help-block">半角英数字のみで、記号等は含められません。最低４文字必要です。<br/>
+                作成後にIDの変更はできませんので注意して命名してください。<br/>
+                Bot IDはURLに表示されるので、ボットの利用者の目に触れます。
+              </p>
+            </div>
+            <div className="checkbox">
               <label>
-                BotSheet:
-                <input type="file"
-                       ref={this.fileInput}
-                       onChange={this.handleFileChange}/>
-              </label>
-            </p>
-            <p>
-              <label>
-                BotId:
-                <input type="text"
-                       value={this.state.botId}
-                       onChange={this.handleBotIdChange}/>
-              </label>
-            </p>
-            <p>
-              <label>
-                allowOverwrite:
                 <input type="checkbox"
                        name="allowOverwrite"
                        checked={this.state.allowOverwrite}
-                       onChange={this.handleAllowOverwriteChange}/>
+                       onChange={this.handleAllowOverwriteChange}/> allow Overwrite
               </label>
-            </p>
+              <p className="help-block">これにチェックを入れると、指定したBot IDのボットが既に存在した場合に上書きされます。</p>
+            </div>
             <p>
-              <button type="submit"
+              <button type="submit" className="btn btn-success"
                       disabled={!this.state.filename || !this.state.botId}>
                 インポート
               </button>
             </p>
             <p>
-              {this.state.message && <span>{this.state.message}</span>}
+              {this.state.messageType &&
+              <pre className={`alert alert-${this.state.messageType}`} role="alert">
+                {this.state.messageText}
+              </pre>
+              }
+            </p>
+            <hr/>
+            <p>
+              <a href="/admin">管理パネルへ</a>
             </p>
           </form>
         </section>
+        <link rel="icon" href="/assets/ui-studio/public/img/favicon.png"/>
+        <link href="/assets/ui-studio/public/external/material-icons.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/font-lato.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/font-roboto.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/assets/modules/channel-web/default.css" rel="stylesheet"/>
       </main>
     )
   }
