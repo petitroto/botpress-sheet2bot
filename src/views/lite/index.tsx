@@ -92,11 +92,11 @@ export class AppView extends React.Component<Props, State> {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="https://chatbot.today/botpress-empowerkit">Botpress EmpowerKit</a>
+              <a className="navbar-brand" href="https://chatbot.today/botpress-heartkit">HeartKit for Botpress</a>
             </div>
             <div id="navbar" className="navbar-collapse collapse">
               <div className="navbar-form navbar-right">
-                <a href="https://chatbot.today/botpress-empowerkit" type="submit" className="btn btn-success">公式サイトへ</a>
+                <a href="https://chatbot.today/botpress-heartkit" type="submit" className="btn btn-success">公式サイトへ</a>
               </div>
             </div>
           </div>
@@ -160,12 +160,15 @@ export class AppView extends React.Component<Props, State> {
               </p>
             </form>
           </section>
-          <link rel="icon" href="/assets/ui-studio/public/img/favicon.png"/>
-          <link href="/assets/ui-studio/public/external/material-icons.css" rel="stylesheet"/>
-          <link href="/assets/ui-studio/public/external/font-lato.css" rel="stylesheet"/>
-          <link href="/assets/ui-studio/public/external/font-roboto.css" rel="stylesheet"/>
-          <link href="/assets/ui-studio/public/external/bootstrap.min.css" rel="stylesheet"/>
+          <footer className="pull-right text-muted">
+            HeartKit is distributed under MIT License by <a href="https://chatbot.today">Chatbot.Today</a>.
+          </footer>
         </main>
+        <link rel="icon" href="/assets/ui-studio/public/img/favicon.png"/>
+        <link href="/assets/ui-studio/public/external/material-icons.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/font-lato.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/font-roboto.css" rel="stylesheet"/>
+        <link href="/assets/ui-studio/public/external/bootstrap.min.css" rel="stylesheet"/>
       </div>
     )
   }
