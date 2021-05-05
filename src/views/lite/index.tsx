@@ -85,7 +85,7 @@ export class AppView extends React.Component<Props, State> {
         <nav className="navbar navbar-inverse navbar-static-top">
           <div className="container">
             <div className="navbar-header">
-              <a className="navbar-brand" href="#">Botpress EmpowerKit</a>
+              <a className="navbar-brand" href="https://chatbot.today/botpress-empowerkit">Botpress EmpowerKit</a>
             </div>
             <ul className="nav navbar-nav navbar-right">
               <li><a href="https://chatbot.today/">by Chatbot.Today</a></li>
