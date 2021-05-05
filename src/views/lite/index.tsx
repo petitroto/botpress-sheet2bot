@@ -157,7 +157,6 @@ export class AppView extends React.Component<Props, State> {
           <link href="/assets/ui-studio/public/external/font-lato.css" rel="stylesheet"/>
           <link href="/assets/ui-studio/public/external/font-roboto.css" rel="stylesheet"/>
           <link href="/assets/ui-studio/public/external/bootstrap.min.css" rel="stylesheet"/>
-          <link href="/assets/modules/channel-web/default.css" rel="stylesheet"/>
         </main>
       </div>
     )
