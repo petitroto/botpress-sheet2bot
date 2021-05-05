@@ -63,13 +63,24 @@ export function buildArchive(pathToArchive, templateFiles, qnas, intents): Promi
 
 function makeDirs(pathToArchive) {
   const dirs = [
-    'content-elements',
-    'hooks',
-    'qna',
     'actions',
-    'intents',
+    'content-elements',
+    'entities',
     'flows/skills',
-    'media'
+    'hooks',
+    'hooks/before_incoming_middleware',
+    'hooks/after_incoming_middleware',
+    'hooks/before_outgoing_middleware',
+    'hooks/after_event_processed',
+    'hooks/before_suggestions_election',
+    'hooks/before_session_timeout',
+    'hooks/after_bot_mount',
+    'hooks/after_bot_unmount',
+    'hooks/before_bot_import',
+    'hooks/after_server_start',
+    'intents',
+    'media',
+    'qna'
   ]
   dirs.forEach(dir => {
     const fullPath = path.join(pathToArchive, dir)
