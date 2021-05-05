@@ -85,18 +85,26 @@ export class AppView extends React.Component<Props, State> {
         <nav className="navbar navbar-inverse navbar-static-top">
           <div className="container">
             <div className="navbar-header">
+              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                      aria-expanded="false" aria-controls="navbar">
+                <span className="sr-only">Toggle navigation</span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+              </button>
               <a className="navbar-brand" href="https://chatbot.today/botpress-empowerkit">Botpress EmpowerKit</a>
             </div>
-            <ul className="nav navbar-nav navbar-right">
-              <li><a href="https://chatbot.today/">by Chatbot.Today</a></li>
-            </ul>
+            <div id="navbar" className="navbar-collapse collapse">
+              <div className="navbar-form navbar-right">
+                <a href="https://chatbot.today/botpress-empowerkit" type="submit" className="btn btn-success">公式サイトへ</a>
+              </div>
+            </div>
           </div>
         </nav>
         <div className="jumbotron">
           <div className="container">
             <h1>Sheet2Bot</h1>
             <p>ExcelファイルからBotを作成できます。</p>
-            <p><a className="btn btn-primary btn-lg" href="https://chatbot.today/sheet2bot" role="button">提供元サイトへ</a></p>
           </div>
         </div>
         <main className="container">
