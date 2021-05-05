@@ -1,11 +1,15 @@
-import * as sdk from 'botpress/sdk'
 import * as XLSX from 'xlsx'
+import {BotSheet, IntentQna} from './typings'
 
-import {IntentQna} from './typings'
-
-export default (bp: typeof sdk, sheetFilePath: string): IntentQna[] => {
+export default (sheetFilePath: string): BotSheet => {
 
   const workbook = XLSX.readFile(sheetFilePath)
   const sheet = workbook.Sheets['intent_qna']
-  return XLSX.utils.sheet_to_json(sheet)
+  const intentQnas: IntentQna[] = XLSX.utils.sheet_to_json(sheet)
+
+  if (!intentQnas || intentQnas.length === 0) {
+    return null
+  }
+
+  return {intentQnas}
 }

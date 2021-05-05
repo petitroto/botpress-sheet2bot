@@ -49,11 +49,20 @@ const botConfig = {
   }
 }
 
-export function buildArchive(pathToArchive, templateFiles, qnas, intents): Promise<Buffer> {
+export function buildArchive(pathToArchive, templateFiles, botContent): Promise<Buffer> {
 
-  const qnaFiles = qnas.map(qna => ({name: `qna/${qna.id}.json`, content: JSON.stringify(qna)}))
-  const intentFiles = intents.map(intent => ({name: `intents/${intent.name}.json`, content: JSON.stringify(intent)}))
-  const otherFiles = [{name: 'bot.config.json', content: JSON.stringify(botConfig)}]
+  const qnaFiles = botContent.qnas.map(qna => ({
+    name: `qna/${qna.id}.json`,
+    content: JSON.stringify(qna)
+  }))
+  const intentFiles = botContent.intents.map(intent => ({
+    name: `intents/${intent.name}.json`,
+    content: JSON.stringify(intent)
+  }))
+  const otherFiles = [{
+    name: 'bot.config.json',
+    content: JSON.stringify(botConfig)
+  }]
   const allFiles = [...templateFiles, ...qnaFiles, ...intentFiles, ...otherFiles]
 
   makeDirs(pathToArchive)
