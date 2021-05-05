@@ -2,7 +2,7 @@ import * as sdk from 'botpress/sdk'
 import multer from 'multer'
 import path from 'path'
 
-import {buildArchive, getTemplate} from './bp-archive'
+import {buildArchive} from './bp-archive'
 import {Intent} from './intent'
 import load from './load'
 import {Qna} from './qna'
@@ -61,11 +61,11 @@ export default async (bp: typeof sdk) => {
         .map(record => new Intent(record))
 
       // テンプレートの読み込み
-      const template = getTemplate()
+      const templateFiles = await bp.bots.getBotTemplate('builtin', 'empty-bot')
 
       // ボットアーカイブを生成
       const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
-      const archive: Buffer = await buildArchive(pathToArchive, template, qnas, intents)
+      const archive: Buffer = await buildArchive(pathToArchive, templateFiles, qnas, intents)
 
       try {
         await bp.bots.importBot(botId, archive, 'default', allowOverwrite)
