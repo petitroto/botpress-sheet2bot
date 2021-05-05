@@ -1,0 +1,22 @@
+{
+  "id": "p4k29ojj5v_",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "ja": [
+        "パスワードの再発行はこちらからどうぞ。"
+      ]
+    },
+    "questions": {
+      "ja": [
+        "ログインできない"
+      ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

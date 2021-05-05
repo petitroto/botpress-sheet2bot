@@ -1,0 +1,18 @@
+{
+  "id": "会員",
+  "name": "会員",
+  "type": "list",
+  "occurrences": [
+    {
+      "name": "会員",
+      "synonyms": [
+        "ユーザー",
+        "メンバー"
+      ]
+    }
+  ],
+  "sensitive": false,
+  "fuzzy": 0.8,
+  "examples": [],
+  "pattern": ""
+}

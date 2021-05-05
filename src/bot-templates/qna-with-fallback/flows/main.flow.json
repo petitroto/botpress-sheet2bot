@@ -1,0 +1,78 @@
+{
+  "version": "0.0.1",
+  "catchAll": {
+    "onReceive": [],
+    "next": []
+  },
+  "startNode": "entry",
+  "nodes": [
+    {
+      "id": "entry",
+      "name": "entry",
+      "next": [
+        {
+          "condition": "event.nlu.intent.name === 'no-qna'",
+          "node": "node-3a3b"
+        },
+        {
+          "condition": "event.nlu.entities.length > 0",
+          "node": "node-f5ed"
+        },
+        {
+          "condition": "true",
+          "node": "node-e6ce"
+        }
+      ],
+      "onEnter": [],
+      "onReceive": null
+    },
+    {
+      "id": "c3eb9904c4",
+      "name": "node-f5ed",
+      "next": [
+        {
+          "condition": "true",
+          "node": ""
+        }
+      ],
+      "onEnter": [
+        "say #!builtin_text-Ikd0XP",
+        "reply-qna-choices {\"question\":\"{{event.nlu.entities.0.data.value}}\",\"text\":\"以下の選択肢に、ご質問に近いものがあればお選びいただけますか。もし無ければ、別の言い方でご質問ください。\",\"placeholder\":\"選択してください\",\"other\":\"選択肢の中に該当する質問がない\",\"typing\":\"yes\"}"
+      ],
+      "onReceive": null,
+      "type": "standard"
+    },
+    {
+      "id": "bcd477b69d",
+      "name": "node-e6ce",
+      "next": [
+        {
+          "condition": "true",
+          "node": ""
+        }
+      ],
+      "onEnter": [
+        "say #!builtin_text-99uIOE",
+        "say #!builtin_text-YYfDdq"
+      ],
+      "onReceive": null,
+      "type": "standard"
+    },
+    {
+      "id": "b39b1e350f",
+      "name": "node-3a3b",
+      "next": [
+        {
+          "condition": "true",
+          "node": ""
+        }
+      ],
+      "onEnter": [
+        "say #!builtin_text-QS6P3U",
+        "say #!builtin_text-YYfDdq"
+      ],
+      "onReceive": null,
+      "type": "standard"
+    }
+  ]
+}

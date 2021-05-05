@@ -1,0 +1,18 @@
+{
+  "id": "退会",
+  "name": "退会",
+  "type": "list",
+  "occurrences": [
+    {
+      "name": "退会",
+      "synonyms": [
+        "解約",
+        "登録削除"
+      ]
+    }
+  ],
+  "sensitive": false,
+  "fuzzy": 0.8,
+  "examples": [],
+  "pattern": ""
+}

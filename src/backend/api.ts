@@ -61,7 +61,7 @@ export default async (bp: typeof sdk) => {
         .map(record => new Intent(record))
 
       // テンプレートの読み込み
-      const templateFiles = await bp.bots.getBotTemplate('builtin', 'empty-bot')
+      const templateFiles = await bp.bots.getBotTemplate('sheet2bot', 'qna-with-fallback')
 
       // ボットアーカイブを生成
       const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)

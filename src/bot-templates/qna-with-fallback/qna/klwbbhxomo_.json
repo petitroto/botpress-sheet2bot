@@ -1,0 +1,22 @@
+{
+  "id": "klwbbhxomo_",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "ja": [
+        "退会するとデータは全て削除されます。"
+      ]
+    },
+    "questions": {
+      "ja": [
+        "退会したらデータは削除されますか"
+      ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

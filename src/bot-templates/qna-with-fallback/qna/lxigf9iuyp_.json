@@ -1,0 +1,22 @@
+{
+  "id": "lxigf9iuyp_",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "ja": [
+        "会員登録はこちらからどうぞ。"
+      ]
+    },
+    "questions": {
+      "ja": [
+        "会員登録したい"
+      ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

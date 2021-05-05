@@ -19,11 +19,9 @@ const onBotUnmount = async (bp: typeof sdk, botId: string) => {}
 // When anything is changed using the flow editor, this is called with the new flow, so you can rename nodes if you reference them
 const onFlowChanged = async (bp: typeof sdk, botId: string, flow: sdk.Flow) => {}
 
-/**
- * This is where you would include your 'demo-bot' definitions.
- * You can copy the content of any existing bot and mark them as "templates", so you can create multiple bots from the same template.
- */
-const botTemplates: sdk.BotTemplate[] = [{ id: 'my_bot_demo', name: 'Bot Demo', desc: `Some description` }]
+const botTemplates: sdk.BotTemplate[] = [
+  {id: 'qna_with_fallback', name: 'QnA with Fallback', desc: 'Template for FAQ bot'}
+]
 
 /**
  * Skills allows you to create custom logic and use them easily on the flow editor
