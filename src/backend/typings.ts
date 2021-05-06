@@ -1,3 +1,4 @@
+import {Entity} from './entity'
 import {Intent} from './intent'
 import {Qna} from './qna'
 
@@ -16,11 +17,34 @@ export interface IntentQna {
   redirectNode: string
 }
 
+export interface EntityRecord {
+  id: string
+  name: string
+  sensitive: boolean
+  type: string
+  occur1: string
+  occur1_1: string
+  occur1_2: string
+  occur1_3: string
+  occur2: string
+  occur2_1: string
+  occur2_2: string
+  occur2_3: string
+  fuzzy: number
+  pattern: string
+  ex1: string
+  ex2: string
+  ex3: string
+  matchCase: boolean
+}
+
 export interface BotSheet {
   intentQnas: IntentQna[]
+  entities: EntityRecord[]
 }
 
 export interface BotContent {
   qnas: Qna[]
   intents: Intent[]
+  entities: Entity[]
 }

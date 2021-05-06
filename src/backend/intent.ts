@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {nanoid} from 'nanoid'
+import {range} from './utils'
 
 interface Slot {
   id: string
@@ -44,14 +45,5 @@ export class Intent {
         }
       })
       .value()
-  }
-}
-
-/**
- * Returns an iterator that iterates integers in [start, end).
- */
-function* range(start, end) {
-  for (let i = start; i < end; i++) {
-    yield i
   }
 }

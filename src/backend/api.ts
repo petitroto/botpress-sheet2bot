@@ -3,6 +3,7 @@ import multer from 'multer'
 import path from 'path'
 
 import {buildArchive} from './bp-archive'
+import {Entity} from './entity'
 import {Intent} from './intent'
 import load from './load'
 import {Qna} from './qna'
@@ -81,7 +82,10 @@ function buildBotContent(botSheet): BotContent {
   const intents = botSheet.intentQnas
     .map(record => new Intent(record))
 
-  return {qnas, intents}
+  const entities = botSheet.entities
+    .map(record => new Entity(record))
+
+  return {qnas, intents, entities}
 }
 
 function createShortLink(bp) {

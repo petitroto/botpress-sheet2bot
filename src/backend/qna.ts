@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {customAlphabet} from 'nanoid'
+import {range} from './utils'
 
 export class Qna {
   id: string
@@ -56,13 +57,4 @@ class QnaData {
 function generateNewQnaId() {
   const allowedLetters = '1234567890abcdefghijklmnopqrsuvwxyz'
   return customAlphabet(allowedLetters, 10)() + '_'
-}
-
-/**
- * Returns an iterator that iterates integers in [start, end).
- */
-function* range(start, end) {
-  for (let i = start; i < end; i++) {
-    yield i
-  }
 }

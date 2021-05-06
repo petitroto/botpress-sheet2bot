@@ -59,11 +59,15 @@ export function buildArchive(pathToArchive, templateFiles, botContent): Promise<
     name: `intents/${intent.name}.json`,
     content: JSON.stringify(intent)
   }))
+  const entityFiles = botContent.entities.map(entity => ({
+    name: `entities/${entity.name}.json`,
+    content: JSON.stringify(entity)
+  }))
   const otherFiles = [{
     name: 'bot.config.json',
     content: JSON.stringify(botConfig)
   }]
-  const allFiles = [...templateFiles, ...qnaFiles, ...intentFiles, ...otherFiles]
+  const allFiles = [...templateFiles, ...qnaFiles, ...intentFiles, ...entityFiles, ...otherFiles]
 
   makeDirs(pathToArchive)
   exportFiles(pathToArchive, allFiles)
