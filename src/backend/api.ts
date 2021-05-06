@@ -3,11 +3,9 @@ import multer from 'multer'
 import path from 'path'
 
 import {buildArchive} from './bp-archive'
-import {Entity} from './entity'
-import {Intent} from './intent'
+import {buildBotContent} from './build-botcontent'
 import load from './load'
-import {Qna} from './qna'
-import {BotSheet, BotContent} from './typings'
+import {BotSheet} from './typings'
 
 const mimeTypeOfXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const destBasePath = '/tmp/botpress-sheet2bot'
@@ -74,19 +72,6 @@ export default async (bp: typeof sdk) => {
   createShortLink(bp)
 }
 
-function buildBotContent(botSheet): BotContent {
-  const qnas = botSheet.intentQnas
-    .filter(intentQna => intentQna.type === 'qna')
-    .map(record => new Qna(record))
-
-  const intents = botSheet.intentQnas
-    .map(record => new Intent(record))
-
-  const entities = botSheet.entities
-    .map(record => new Entity(record))
-
-  return {qnas, intents, entities}
-}
 
 function createShortLink(bp) {
   const params = {

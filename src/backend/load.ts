@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'
-import {BotSheet, IntentQna, EntityRecord} from './typings'
+import {BotSheet, IntentQna, EntityRecord, TextRecord} from './typings'
 
 export default (sheetFilePath: string): BotSheet => {
 
@@ -15,5 +15,10 @@ export default (sheetFilePath: string): BotSheet => {
     return null
   }
 
-  return {intentQnas, entities}
+  const textRecords: TextRecord[] = XLSX.utils.sheet_to_json(workbook.Sheets['builtin_text'])
+  if (!textRecords || textRecords.length === 0) {
+    return null
+  }
+
+  return {intentQnas, entities, textRecords}
 }
