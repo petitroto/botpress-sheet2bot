@@ -1,8 +1,3 @@
-import {Entity} from './entity'
-import {Intent} from './intent'
-import {Qna} from './qna'
-import {TextContent} from './text-content'
-
 export interface IntentQna {
   type: string
   action: string
@@ -44,17 +39,4 @@ export interface TextRecord {
   markdown$ja: boolean
   typing$ja: boolean
   text$ja: string
-}
-
-export interface BotSheet {
-  intentQnas: IntentQna[]
-  entities: EntityRecord[]
-  textRecords: TextRecord[]
-}
-
-export interface BotContent {
-  qnas: Qna[]
-  intents: Intent[]
-  entities: Entity[]
-  textContents: TextContent[]
 }
