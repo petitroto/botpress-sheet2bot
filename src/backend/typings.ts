@@ -40,3 +40,20 @@ export interface TextRecord {
   typing$ja: boolean
   text$ja: string
 }
+
+export interface ChoiceRecord {
+  id: string
+  markdown$ja: boolean
+  typing$ja: boolean
+  disableFreeText$ja: boolean
+  text$ja: string
+  dropdownPlaceholder$ja: string
+  choice1_title: string
+  choice1_value: string
+  choice2_title: string
+  choice2_value: string
+  choice3_title: string
+  choice3_value: string
+  choice4_title: string
+  choice4_value: string
+}

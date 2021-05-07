@@ -1,35 +1,35 @@
 import * as XLSX from 'xlsx'
-import {IntentQna, EntityRecord, TextRecord} from './typings'
+import {IntentQna, EntityRecord, TextRecord, ChoiceRecord} from './typings'
 
 export class BotSheet {
   intentQnas: IntentQna[]
   entities: EntityRecord[]
   textRecords: TextRecord[]
+  choiceRecords: ChoiceRecord[]
 
-  constructor(intentQnas, entities, textRecords) {
+  constructor(intentQnas, entities, textRecords, choiceRecords) {
     this.intentQnas = intentQnas
     this.entities = entities
     this.textRecords = textRecords
+    this.choiceRecords = choiceRecords
   }
 
   static fromFile(sheetFilePath: string): BotSheet {
-    const workbook = XLSX.readFile(sheetFilePath)
+    const book = XLSX.readFile(sheetFilePath)
 
-    const intentQnas: IntentQna[] = XLSX.utils.sheet_to_json(workbook.Sheets['intent_qna'])
-    if (!intentQnas || intentQnas.length === 0) {
+    const intentQnas: IntentQna[] = getSheetAsJson(book, 'intent_qna')
+    const entities: EntityRecord[] = getSheetAsJson(book, 'entities')
+    const textRecords: TextRecord[] = getSheetAsJson(book, 'builtin_text')
+    const choiceRecords: ChoiceRecord[] = getSheetAsJson(book, 'builtin_single-choice')
+
+    if (!intentQnas && !entities && !textRecords && !choiceRecords) {
       return null
+    } else {
+      return new BotSheet(intentQnas, entities, textRecords, choiceRecords)
     }
-
-    const entities: EntityRecord[] = XLSX.utils.sheet_to_json(workbook.Sheets['entities'])
-    if (!entities || entities.length === 0) {
-      return null
-    }
-
-    const textRecords: TextRecord[] = XLSX.utils.sheet_to_json(workbook.Sheets['builtin_text'])
-    if (!textRecords || textRecords.length === 0) {
-      return null
-    }
-
-    return new BotSheet(intentQnas, entities, textRecords)
   }
+}
+
+function getSheetAsJson(workbook, sheetName): any {
+  return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
 }

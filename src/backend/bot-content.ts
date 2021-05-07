@@ -1,3 +1,4 @@
+import {ChoiceContent} from './choice-content'
 import {Entity} from './entity'
 import {Intent} from './intent'
 import {Qna} from './qna'
@@ -8,12 +9,14 @@ export class BotContent {
   intents: Intent[]
   entities: Entity[]
   textContents: TextContent[]
+  choiceContents: ChoiceContent[]
 
-  constructor(qnas, intents, entities, textContents) {
+  constructor(qnas, intents, entities, textContents, choiceContents) {
     this.qnas = qnas
     this.intents = intents
     this.entities = entities
     this.textContents = textContents
+    this.choiceContents = choiceContents
   }
 
   static fromBotSheet(botSheet): BotContent {
@@ -30,6 +33,9 @@ export class BotContent {
     const textContents = botSheet.textRecords
       .map(record => new TextContent(record))
 
-    return new BotContent(qnas, intents, entities, textContents)
+    const choiceContents = botSheet.choiceRecords
+      .map(record => new ChoiceContent(record))
+
+    return new BotContent(qnas, intents, entities, textContents, choiceContents)
   }
 }

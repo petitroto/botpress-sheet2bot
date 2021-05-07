@@ -50,6 +50,10 @@ export class BotArchive {
         content: JSON.stringify(botContent.textContents)
       },
       {
+        name: 'content-elements/builtin_single-choice.json',
+        content: JSON.stringify(botContent.choiceContents)
+      },
+      {
         name: 'bot.config.json',
         content: JSON.stringify(botConfig)
       }
