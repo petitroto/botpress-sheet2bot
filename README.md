@@ -10,8 +10,10 @@ It's currently being made for Japanese content.
 2. Open the module management page of your Botpress.
 3. Click `Upload Module' button to upload the module archive.
 4. Restart Botpress.
-5. Open {EXTERNAL_URL}/s/sheet2bot in your browser. (ex. http://localhost:3000/s/sheet2bot )
-6. Then you can see the Sheet2Bot form.
+5. Click `Unpack Module' button for sheet2bot.
+6. Turn on the toggle switch to activate sheet2bot.
+7. Open {EXTERNAL_URL}/s/sheet2bot in your browser. (ex. http://localhost:3000/s/sheet2bot )
+8. Then you can see the Sheet2Bot form.
 
 ## Usage
 
