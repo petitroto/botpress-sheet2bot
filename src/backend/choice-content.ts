@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import {ChoiceRecord} from './typings'
-import {range} from './utils'
+import {generateElementId, range} from './utils'
+
+const contentTypeId: string = 'builtin_single-choice'
 
 interface FormData {
   markdown$ja: boolean
@@ -24,7 +26,7 @@ export class ChoiceContent {
   modifiedOn: string
 
   constructor(record: ChoiceRecord) {
-    this.id = record.id
+    this.id = record.id || generateElementId(contentTypeId)
     this.formData = {
       markdown$ja: record.markdown$ja,
       typing$ja: record.typing$ja,

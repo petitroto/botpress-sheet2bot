@@ -1,4 +1,7 @@
 import {TextRecord} from './typings'
+import {generateElementId} from './utils'
+
+const contentTypeId: string = 'builtin_text'
 
 interface FormData {
   markdown$ja: boolean
@@ -14,7 +17,7 @@ export class TextContent {
   modifiedOn: string
 
   constructor(record: TextRecord) {
-    this.id = record.id
+    this.id = record.id || generateElementId(contentTypeId)
     this.formData = {
       markdown$ja: record.markdown$ja,
       typing$ja: record.typing$ja,

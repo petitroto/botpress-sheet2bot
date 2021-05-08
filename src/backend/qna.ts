@@ -9,10 +9,15 @@ export class Qna {
   constructor(record: any) {
     // ID指定が無かったら生成（これはmakeIntentでも使う）
     if (!record.qna_id) {
-      record.qna_id = generateNewQnaId()
+      record.qna_id = this.generateId()
     }
     this.id = record.qna_id
     this.data = new QnaData(record)
+  }
+
+  generateId() {
+    const allowedLetters = '1234567890abcdefghijklmnopqrsuvwxyz'
+    return customAlphabet(allowedLetters, 10)() + '_'
   }
 }
 
@@ -52,9 +57,4 @@ class QnaData {
     this.redirectFlow = record.redirectFlow
     this.redirectNode = record.redirectNode
   }
-}
-
-function generateNewQnaId() {
-  const allowedLetters = '1234567890abcdefghijklmnopqrsuvwxyz'
-  return customAlphabet(allowedLetters, 10)() + '_'
 }

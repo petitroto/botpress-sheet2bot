@@ -35,7 +35,7 @@ export class Intent {
       .map(({index}) => {
         // ID指定がなかったら生成する
         if (!record[`slot${index}_id`]) {
-          record[`slot${index}_id`] = nanoid()
+          record[`slot${index}_id`] = this.generateSlotId()
         }
         return {
           id: record[`slot${index}_id`],
@@ -45,5 +45,9 @@ export class Intent {
         }
       })
       .value()
+  }
+
+  generateSlotId() {
+    return nanoid()
   }
 }
