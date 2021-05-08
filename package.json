@@ -1,7 +1,7 @@
 {
   "name": "sheet2bot",
   "fullName": "Sheet2Bot",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Generate bot from xlsx: http://localhost:3000/s/sheet2bot",
   "private": true,
   "main": "dist/backend/index.js",
