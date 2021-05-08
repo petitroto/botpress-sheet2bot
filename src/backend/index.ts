@@ -20,7 +20,7 @@ const onBotUnmount = async (bp: typeof sdk, botId: string) => {}
 const onFlowChanged = async (bp: typeof sdk, botId: string, flow: sdk.Flow) => {}
 
 const botTemplates: sdk.BotTemplate[] = [
-  {id: 'qna_with_fallback', name: 'QnA with Fallback', desc: 'Template for FAQ bot'}
+  {id: 'qna-with-fallback', name: 'QnA with Fallback', desc: 'Template for FAQ bot'}
 ]
 
 /**
