@@ -127,7 +127,7 @@ export class AppView extends React.Component<Props, State> {
                        placeholder="yourBotId"
                        value={this.state.botId}
                        onChange={this.handleBotIdChange}/>
-                <p className="help-block">半角英数字のみで、記号等は含められません。最低４文字必要です。<br/>
+                <p className="help-block">半角英数字のみで、空白や記号等は含められません。最低４文字必要です。<br/>
                   作成後にIDの変更はできませんので注意して命名してください。<br/>
                   Bot IDはURLに表示されるので、ボットの利用者の目に触れます。
                 </p>
