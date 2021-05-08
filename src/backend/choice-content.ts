@@ -38,6 +38,7 @@ export class ChoiceContent {
           title: record[`choice${index}_title`],
           value: record[`choice${index}_value`]
         }))
+        .filter(option => option.title != null)
         .value()
     }
     this.createdBy = 'admin'
