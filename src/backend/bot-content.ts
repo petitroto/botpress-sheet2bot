@@ -1,3 +1,4 @@
+import * as sdk from 'botpress/sdk'
 import {ChoiceContent} from './choice-content'
 import {Entity} from './entity'
 import {Intent} from './intent'
@@ -37,5 +38,32 @@ export class BotContent {
       .map(record => new ChoiceContent(record))
 
     return new BotContent(qnas, intents, entities, textContents, choiceContents)
+  }
+
+  toContentFiles(): sdk.FileContent[] {
+    const qnaFiles = this.qnas.map(qna => ({
+      name: `qna/${qna.id}.json`,
+      content: JSON.stringify(qna)
+    }))
+    const intentFiles = this.intents.map(intent => ({
+      name: `intents/${intent.name}.json`,
+      content: JSON.stringify(intent)
+    }))
+    const entityFiles = this.entities.map(entity => ({
+      name: `entities/${entity.name}.json`,
+      content: JSON.stringify(entity)
+    }))
+    const otherFiles = [
+      {
+        name: 'content-elements/builtin_text.json',
+        content: JSON.stringify(this.textContents)
+      },
+      {
+        name: 'content-elements/builtin_single-choice.json',
+        content: JSON.stringify(this.choiceContents)
+      }
+    ]
+
+    return [...qnaFiles, ...intentFiles, ...entityFiles, ...otherFiles]
   }
 }

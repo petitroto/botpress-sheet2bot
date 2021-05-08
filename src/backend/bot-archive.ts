@@ -1,7 +1,11 @@
+import * as sdk from 'botpress/sdk'
 import fs from 'fs'
+import _ from 'lodash'
 import path from 'path'
 import stream from 'stream'
 import tar from 'tar'
+
+import {botConfig} from './bot-config'
 
 export class BotArchive {
   dirs = [
@@ -26,39 +30,39 @@ export class BotArchive {
   ]
   pathToArchive: string
 
-  constructor(pathToArchive) {
-    this.pathToArchive = pathToArchive
+  constructor(destBasePath) {
+    this.pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
   }
 
-  build(templateFiles, botContent, botConfig): Promise<Buffer> {
+  build(baseFiles: sdk.FileContent[], contentFiles: sdk.FileContent[]): Promise<Buffer> {
+    const newFiles = _.differenceBy(contentFiles, baseFiles, 'name')
+    const noConflictFiles = _.differenceBy(baseFiles, contentFiles, 'name')
+    const conflictBaseFiles = _.intersectionBy(baseFiles, contentFiles, 'name')
 
-    const qnaFiles = botContent.qnas.map(qna => ({
-      name: `qna/${qna.id}.json`,
-      content: JSON.stringify(qna)
-    }))
-    const intentFiles = botContent.intents.map(intent => ({
-      name: `intents/${intent.name}.json`,
-      content: JSON.stringify(intent)
-    }))
-    const entityFiles = botContent.entities.map(entity => ({
-      name: `entities/${entity.name}.json`,
-      content: JSON.stringify(entity)
-    }))
+    const mergedFiles = conflictBaseFiles.map(baseFile => {
+      // コンテントエレメント以外のファイルはマージ不要なのでそのまま
+      if (!baseFile.name.match(/^content-elements/)) {
+        return baseFile
+      }
+      // インポートコンテンツにあるコンテントエレメントなら、マージしたファイルにする
+      const contentFile = contentFiles.find(file => file.name === baseFile.name)
+      const newObjects = JSON.parse(String(contentFile.content))
+      const baseObjects = JSON.parse(String(baseFile.content))
+      const mergedObjects = [...baseObjects, ...newObjects]
+      return {
+        name: baseFile.name,
+        content: JSON.stringify(mergedObjects)
+      }
+    })
+
     const otherFiles = [
-      {
-        name: 'content-elements/builtin_text.json',
-        content: JSON.stringify(botContent.textContents)
-      },
-      {
-        name: 'content-elements/builtin_single-choice.json',
-        content: JSON.stringify(botContent.choiceContents)
-      },
       {
         name: 'bot.config.json',
         content: JSON.stringify(botConfig)
       }
     ]
-    const allFiles = [...templateFiles, ...qnaFiles, ...intentFiles, ...entityFiles, ...otherFiles]
+
+    const allFiles = [...noConflictFiles, ...mergedFiles, ...newFiles, ...otherFiles]
 
     this.makeDirs()
     this.exportFiles(allFiles)

@@ -3,7 +3,6 @@ import multer from 'multer'
 import path from 'path'
 
 import {BotArchive} from './bot-archive'
-import {botConfig} from './bot-config'
 import {BotContent} from './bot-content'
 import {BotSheet} from './bot-sheet'
 
@@ -51,14 +50,14 @@ export default async (bp: typeof sdk) => {
 
       // ボットシートの内容から、Botpressのデータ構造へ組み換え
       const botContent = BotContent.fromBotSheet(botSheet)
+      const contentFiles = botContent.toContentFiles()
 
       // テンプレートの読み込み
       const templateFiles = await bp.bots.getBotTemplate('sheet2bot', 'qna-with-fallback')
 
       // ボットアーカイブを生成
-      const pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
-      const botArchive = new BotArchive(pathToArchive)
-      const archive: Buffer = await botArchive.build(templateFiles, botContent, botConfig)
+      const botArchive = new BotArchive(destBasePath)
+      const archive: Buffer = await botArchive.build(templateFiles, contentFiles)
 
       // インポート
       try {
