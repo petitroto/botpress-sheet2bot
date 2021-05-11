@@ -1,16 +1,80 @@
-export interface IntentQna {
-  type: string
+export interface QnaRecord {
+  id: string
   action: string
-  context1: string
   enabled: boolean
+  context1: string
+  context2: string
+  context3: string
+  context4: string
+  context5: string
   question1: string
   question2: string
   question3: string
   question4: string
   question5: string
+  question6: string
+  question7: string
+  question8: string
+  question9: string
+  question10: string
+  question11: string
+  question12: string
+  question13: string
+  question14: string
+  question15: string
+  question16: string
+  question17: string
+  question18: string
+  question19: string
+  question20: string
   answer1: string
+  answer2: string
+  answer3: string
+  answer4: string
+  answer5: string
   redirectFlow: string
   redirectNode: string
+}
+
+export interface IntentRecord {
+  name: string
+  context1: string
+  context2: string
+  context3: string
+  context4: string
+  context5: string
+  utterance1: string
+  utterance2: string
+  utterance3: string
+  utterance4: string
+  utterance5: string
+  utterance6: string
+  utterance7: string
+  utterance8: string
+  utterance9: string
+  utterance10: string
+  utterance11: string
+  utterance12: string
+  utterance13: string
+  utterance14: string
+  utterance15: string
+  utterance16: string
+  utterance17: string
+  utterance18: string
+  utterance19: string
+  utterance20: string
+  slot1_id: string
+  slot1_name: string
+  slot1_entities: string
+  slot1_color: number
+  slot2_id: string
+  slot2_name: string
+  slot2_entities: string
+  slot2_color: number
+  slot3_id: string
+  slot3_name: string
+  slot3_entities: string
+  slot3_color: number
 }
 
 export interface EntityRecord {
@@ -22,15 +86,74 @@ export interface EntityRecord {
   occur1_1: string
   occur1_2: string
   occur1_3: string
+  occur1_4: string
+  occur1_5: string
   occur2: string
   occur2_1: string
   occur2_2: string
   occur2_3: string
+  occur2_4: string
+  occur2_5: string
+  occur3: string
+  occur3_1: string
+  occur3_2: string
+  occur3_3: string
+  occur3_4: string
+  occur3_5: string
+  occur4: string
+  occur4_1: string
+  occur4_2: string
+  occur4_3: string
+  occur4_4: string
+  occur4_5: string
+  occur5: string
+  occur5_1: string
+  occur5_2: string
+  occur5_3: string
+  occur5_4: string
+  occur5_5: string
+  occur6: string
+  occur6_1: string
+  occur6_2: string
+  occur6_3: string
+  occur6_4: string
+  occur6_5: string
+  occur7: string
+  occur7_1: string
+  occur7_2: string
+  occur7_3: string
+  occur7_4: string
+  occur7_5: string
+  occur8: string
+  occur8_1: string
+  occur8_2: string
+  occur8_3: string
+  occur8_4: string
+  occur8_5: string
+  occur9: string
+  occur9_1: string
+  occur9_2: string
+  occur9_3: string
+  occur9_4: string
+  occur9_5: string
+  occur10: string
+  occur10_1: string
+  occur10_2: string
+  occur10_3: string
+  occur10_4: string
+  occur10_5: string
   fuzzy: number
   pattern: string
   ex1: string
   ex2: string
   ex3: string
+  ex4: string
+  ex5: string
+  ex6: string
+  ex7: string
+  ex8: string
+  ex9: string
+  ex10: string
   matchCase: boolean
 }
 
@@ -56,4 +179,16 @@ export interface ChoiceRecord {
   choice3_value: string
   choice4_title: string
   choice4_value: string
+  choice5_title: string
+  choice5_value: string
+  choice6_title: string
+  choice6_value: string
+  choice7_title: string
+  choice7_value: string
+  choice8_title: string
+  choice8_value: string
+  choice9_title: string
+  choice9_value: string
+  choice10_title: string
+  choice10_value: string
 }

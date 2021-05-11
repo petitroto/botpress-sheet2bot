@@ -1,17 +1,18 @@
 import _ from 'lodash'
 import {customAlphabet} from 'nanoid'
+import {QnaRecord} from './typings';
 import {range} from './utils'
 
 export class Qna {
   id: string
   data: QnaData
 
-  constructor(record: any) {
+  constructor(record: QnaRecord) {
     // ID指定が無かったら生成（これはmakeIntentでも使う）
-    if (!record.qna_id) {
-      record.qna_id = this.generateId()
+    if (!record.id) {
+      record.id = this.generateId()
     }
-    this.id = record.qna_id
+    this.id = record.id
     this.data = new QnaData(record)
   }
 
@@ -41,17 +42,17 @@ class QnaData {
       .map(i => record[`context${i}`])
       .compact()
       .value()
+    this.questions = {
+      ja: _.chain([...range(1, 21)])
+        .map(i => record[`question${i}`])
+        .compact()
+        .value()
+    }
     this.answers = {
-      ja: _.chain([...range(1, 11)])
+      ja: _.chain([...range(1, 6)])
         .map(i => record[`answer${i}`])
         .compact()
         .map(answer => answer.replace(/\r\n/g, '\n'))
-        .value()
-    }
-    this.questions = {
-      ja: _.chain([...range(1, 11)])
-        .map(i => record[`question${i}`])
-        .compact()
         .value()
     }
     this.redirectFlow = record.redirectFlow

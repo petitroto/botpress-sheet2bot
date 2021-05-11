@@ -33,7 +33,7 @@ export class ChoiceContent {
       disableFreeText$ja: record.disableFreeText$ja,
       text$ja: record.text$ja,
       dropdownPlaceholder$ja: record.dropdownPlaceholder$ja,
-      choices$ja: _.chain([...range(1, 6)])
+      choices$ja: _.chain([...range(1, 11)])
         .map(index => ({
           title: record[`choice${index}_title`],
           value: record[`choice${index}_value`]

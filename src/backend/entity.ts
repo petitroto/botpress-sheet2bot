@@ -31,7 +31,7 @@ export class Entity {
       .map(ocIndex => ({ocIndex, name: record[`occur${ocIndex}`]}))
       .filter(data => data.name != null)
       .map(({ocIndex, name}) => {
-        const synonyms = _.chain([...range(1, 11)])
+        const synonyms = _.chain([...range(1, 6)])
           .map(syIndex => record[`occur${ocIndex}_${syIndex}`])
           .compact()
           .value()

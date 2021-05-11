@@ -21,14 +21,13 @@ export class BotContent {
   }
 
   static fromBotSheet(botSheet): BotContent {
-    const qnas = botSheet.intentQnas
-      .filter(intentQna => intentQna.type === 'qna')
+    const qnas = botSheet.qnaRecords
       .map(record => new Qna(record))
 
-    const intents = botSheet.intentQnas
+    const intents = botSheet.intentRecords
       .map(record => new Intent(record))
 
-    const entities = botSheet.entities
+    const entities = botSheet.entityRecords
       .map(record => new Entity(record))
 
     const textContents = botSheet.textRecords

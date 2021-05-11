@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {nanoid} from 'nanoid'
+import {IntentRecord} from './typings'
 import {range} from './utils'
 
 interface Slot {
@@ -17,19 +18,19 @@ export class Intent {
   }
   slots: Array<Slot>
 
-  constructor(record: any) {
-    this.name = record.intent_name || `__qna__${record.qna_id}`
+  constructor(record: IntentRecord) {
+    this.name = record.name
     this.contexts = _.chain([...range(1, 6)])
       .map(i => record[`context${i}`])
       .compact()
       .value()
     this.utterances = {
-      ja: _.chain([...range(1, 11)])
-        .map(i => record[`question${i}`])
+      ja: _.chain([...range(1, 21)])
+        .map(i => record[`utterance${i}`])
         .compact()
         .value()
     }
-    this.slots = _.chain([...range(1, 6)])
+    this.slots = _.chain([...range(1, 4)])
       .map(index => ({index, slotName: record[`slot${index}_name`]}))
       .filter(data => data.slotName != null)
       .map(({index}) => {
