@@ -4,6 +4,7 @@ import {Entity} from './entity'
 import {Intent} from './intent'
 import {Qna} from './qna'
 import {TextContent} from './text-content'
+import {flatMap} from './utils'
 
 export class BotContent {
   qnas: Qna[]
@@ -22,19 +23,43 @@ export class BotContent {
 
   static fromBotSheet(botSheet): BotContent {
     const qnas = botSheet.qnaRecords
-      .map(record => new Qna(record))
+      .map(record => Qna.fromRecord(record))
 
     const intents = botSheet.intentRecords
-      .map(record => new Intent(record))
+      .map(record => Intent.fromRecord(record))
 
     const entities = botSheet.entityRecords
-      .map(record => new Entity(record))
+      .map(record => Entity.fromRecord(record))
 
     const textContents = botSheet.textRecords
-      .map(record => new TextContent(record))
+      .map(record => TextContent.fromRecord(record))
 
     const choiceContents = botSheet.choiceRecords
-      .map(record => new ChoiceContent(record))
+      .map(record => ChoiceContent.fromRecord(record))
+
+    return new BotContent(qnas, intents, entities, textContents, choiceContents)
+  }
+
+  static async fromGhost(ghost): Promise<BotContent> {
+
+    const getObjectsInFolder = async (folder: string): Promise<Array<any>> => {
+      const names = await ghost.directoryListing(folder, '*.json')
+      return Promise.all(names.map(name => ghost.readFileAsObject(folder, name)))
+    }
+
+    const rawQnas = await getObjectsInFolder('qna')
+    const qnas = rawQnas.map(raw => new Qna(raw))
+
+    const rawIntents = await getObjectsInFolder('intents')
+    const intents = flatMap(rawIntents, raw => !raw.name.match(/^__qna__/) ? [new Intent(raw)] : [])
+
+    const rawentities = await getObjectsInFolder('entities')
+    const entities = rawentities.map(raw => new Entity(raw))
+
+    const rawTextContents = await ghost.readFileAsObject('content-elements', 'builtin_text.json')
+    const textContents = rawTextContents.map(raw => new TextContent(raw))
+    const rawChoiceContents = await ghost.readFileAsObject('content-elements', 'builtin_single-choice.json')
+    const choiceContents = rawChoiceContents.map(raw => new ChoiceContent(raw))
 
     return new BotContent(qnas, intents, entities, textContents, choiceContents)
   }

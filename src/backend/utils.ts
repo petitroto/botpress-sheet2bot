@@ -10,3 +10,7 @@ export function generateElementId(contentTypeId: string): string {
   const prefix = contentTypeId.replace(/^#/, '')
   return `${prefix}-${nanoid(6)}`
 }
+
+export function flatMap<T, U>(array: T[], callbackfn: (value: T, index: number, array: T[]) => U[]): U[] {
+  return Array.prototype.concat(...array.map(callbackfn));
+}

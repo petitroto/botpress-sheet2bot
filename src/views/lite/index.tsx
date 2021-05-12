@@ -1,4 +1,4 @@
-import {AxiosInstance} from 'axios'
+import {AxiosInstance, ResponseType} from 'axios'
 import React from 'react'
 import {Status} from './status'
 
@@ -14,10 +14,12 @@ interface Props {
   bp: { axios: AxiosInstance }
 }
 
+function getBaseURL(botId = '___') {
+  return `/api/v1/bots/${botId}/mod/sheet2bot`
+}
 
 export class AppView extends React.Component<Props, State> {
   fileInput: any
-  axiosConfig: any
 
   constructor(props) {
     super(props)
@@ -26,20 +28,15 @@ export class AppView extends React.Component<Props, State> {
       botId: '',
       allowOverwrite: false,
       messageType: '',
-      messageText: ''
+      messageText: '',
     }
     this.fileInput = React.createRef()
-    this.axiosConfig = {
-      baseURL: '/api/v1/bots/___/mod/sheet2bot',
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }
 
     this.handleFileChange = this.handleFileChange.bind(this)
     this.handleBotIdChange = this.handleBotIdChange.bind(this)
     this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleExport = this.handleExport.bind(this)
   }
 
   handleFileChange(event) {
@@ -58,9 +55,37 @@ export class AppView extends React.Component<Props, State> {
     this.setState({allowOverwrite: event.target.checked})
   }
 
+  async handleExport() {
+    // サーバーから受信
+    const axiosConfig = {
+      baseURL: getBaseURL(this.state.botId),
+      responseType: 'blob' as ResponseType
+    }
+    const res = await this.props.bp.axios.get('/export', axiosConfig)
+    const mineType = res.headers['content-type']
+    const contentDisposition = res.headers['content-disposition']
+
+    // 保存データの作成
+    const blob = new Blob([res.data], {type: mineType})
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const downloadFilename = contentDisposition.replace((/attachment; filename=(.+)$/), '$1')
+
+    // ファイル保存の実行
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.setAttribute('download', downloadFilename)
+    document.body.appendChild(link)
+    link.click()
+    window.URL.revokeObjectURL(downloadUrl)
+  }
+
   async handleSubmit(event) {
     event.preventDefault()
 
+    const axiosConfig = {
+      baseURL: getBaseURL(),
+      headers: {'content-type': 'multipart/form-data'}
+    }
     const form = new FormData()
     const file = this.fileInput.current.files[0]
     form.append('file', file)
@@ -68,7 +93,7 @@ export class AppView extends React.Component<Props, State> {
     form.append('allowOverwrite', String(this.state.allowOverwrite))
 
     try {
-      const res = await this.props.bp.axios.post('/import', form, this.axiosConfig)
+      const res = await this.props.bp.axios.post('/import', form, axiosConfig)
       const statusName = '200'
       const {messageType, messageText} = new Status(res.data.botId).getMessage(statusName)
       this.setState({messageType, messageText})
@@ -145,6 +170,10 @@ export class AppView extends React.Component<Props, State> {
                 <button type="submit" className="btn btn-success"
                         disabled={!this.state.filename || !this.state.botId}>
                   インポート
+                </button>
+                <button type="button" className="btn btn-success"
+                        onClick={this.handleExport}>
+                  エクスポート
                 </button>
               </p>
               <p>

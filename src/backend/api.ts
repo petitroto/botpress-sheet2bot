@@ -66,7 +66,29 @@ export default async (bp: typeof sdk) => {
       } catch (err) {
         res.status(500).json({botId, message: 'Failed to import'})
       }
-    })
+    }
+  )
+
+  router.get(
+    '/export',
+    async (req, res) => {
+      const botId = req.params.botId
+
+      const ghost = bp.ghost.forBot(botId)
+      const botContent = await BotContent.fromGhost(ghost)
+
+      const botSheet: BotSheet = BotSheet.fromContent(botContent)
+
+      const xlsxFileBuffer = botSheet.toFile()
+
+      res.writeHead(200, {
+        'Content-Type': mimeTypeOfXlsx,
+        'Content-Disposition': `attachment; filename=botsheet_${botId}_${Date.now()}.xlsx`,
+        'Content-Length': xlsxFileBuffer.length
+      })
+      res.end(xlsxFileBuffer)
+    }
+  )
 
   // /s/sheet2bot でアクセス可能にする
   createShortLink(bp)
