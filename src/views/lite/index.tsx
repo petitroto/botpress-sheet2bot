@@ -133,65 +133,86 @@ export class AppView extends React.Component<Props, State> {
           </div>
         </div>
         <main className="container">
-          <section>
-            <form onSubmit={this.handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="BotSheet">ボットシート <span className="text-danger">*</span></label>
-                <input type="file"
-                       id="BotSheet"
-                       ref={this.fileInput}
-                       onChange={this.handleFileChange}/>
-                <p className="help-block">ボットシートとは、Botのコンテンツを所定の形式で格納したExcelファイルです。（<a
-                  href="http://localhost:3000/assets/modules/sheet2bot/botsheet-example.xlsx">サンプル</a>）</p>
-              </div>
-              <div className="form-group">
-                <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
-                <input type="text"
-                       className="form-control"
-                       id="BotId"
-                       placeholder="my_bot-1"
-                       value={this.state.botId}
-                       onChange={this.handleBotIdChange}/>
-                <p className="help-block">半角英数字のみで、空白や特殊文字は含められません。最低４文字必要です。<br/>
-                  作成後にIDの変更はできませんので注意して命名してください。<br/>
-                  Bot IDはURLに表示されるので、ボットの利用者の目に触れます。
+          <section className="row marketing">
+            <div className="col-md-6">
+              <h3>インポート</h3>
+              <form onSubmit={this.handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="BotSheet">ボットシート <span className="text-danger">*</span></label>
+                  <input type="file"
+                         id="BotSheet"
+                         ref={this.fileInput}
+                         onChange={this.handleFileChange}/>
+                  <p className="help-block">ボットシートとは、ボットのコンテンツを所定の形式で格納したExcelファイルです。（<a
+                    href="http://localhost:3000/assets/modules/sheet2bot/botsheet-example.xlsx">サンプルファイル</a>を加工するか、既存のボットをエクスポートして作成してください）
+                  </p>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
+                  <input type="text"
+                         className="form-control"
+                         id="BotId"
+                         placeholder="my_bot-1"
+                         value={this.state.botId}
+                         onChange={this.handleBotIdChange}/>
+                  <p className="help-block">半角英数字のみで、空白や特殊文字は含められません。最低４文字必要です。</p>
+                </div>
+                <div className="checkbox">
+                  <label>
+                    <input type="checkbox"
+                           name="allowOverwrite"
+                           checked={this.state.allowOverwrite}
+                           onChange={this.handleAllowOverwriteChange}/> 上書き更新を許可
+                  </label>
+                  <p className="help-block">チェックを入れると、指定したBot IDのボットが既に存在した場合に上書きされます。</p>
+                </div>
+                <p>
+                  <button type="submit" className="btn btn-success"
+                          disabled={!this.state.filename || !this.state.botId}>
+                    インポート
+                  </button>
                 </p>
-              </div>
-              <div className="checkbox">
-                <label>
-                  <input type="checkbox"
-                         name="allowOverwrite"
-                         checked={this.state.allowOverwrite}
-                         onChange={this.handleAllowOverwriteChange}/> 上書き更新を許可
-                </label>
-                <p className="help-block">これにチェックを入れると、指定したBot IDのボットが既に存在した場合に上書きされます。</p>
-              </div>
+              </form>
+            </div>
+
+            <div className="col-md-6">
+              <h3>エクスポート</h3>
+              <form onSubmit={this.handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
+                  <input type="text"
+                         className="form-control"
+                         id="BotIdForExport"
+                         placeholder="my_bot-1"
+                         value={this.state.botId}
+                         onChange={this.handleBotIdChange}/>
+                </div>
+                <p>
+                  <button type="button" className="btn btn-success"
+                          onClick={this.handleExport}>
+                    エクスポート
+                  </button>
+                </p>
+              </form>
+            </div>
+
+            <div className="col-md-12">
               <p>
-                <button type="submit" className="btn btn-success"
-                        disabled={!this.state.filename || !this.state.botId}>
-                  インポート
-                </button>
-                <button type="button" className="btn btn-success"
-                        onClick={this.handleExport}>
-                  エクスポート
-                </button>
-              </p>
-              <p>
-                {this.state.messageType &&
-                <pre className={`alert alert-${this.state.messageType}`} role="alert">
-                {this.state.messageText}
-              </pre>
+                {
+                  this.state.messageType &&
+                  <pre className={`alert alert-${this.state.messageType}`}
+                       role="alert">{this.state.messageText}</pre>
                 }
               </p>
               <p className="text-right">
                 <a href="/admin">Botpress管理パネルへ移動</a>
               </p>
               <hr/>
-            </form>
+              <footer className="pull-right text-muted">
+                HeartKit is distributed under MIT License by <a href="https://chatbot.today">Chatbot.Today</a>.
+              </footer>
+            </div>
           </section>
-          <footer className="pull-right text-muted">
-            HeartKit is distributed under MIT License by <a href="https://chatbot.today">Chatbot.Today</a>.
-          </footer>
         </main>
         <link rel="icon" href="/assets/ui-studio/public/img/favicon.png"/>
         <link href="/assets/ui-studio/public/external/material-icons.css" rel="stylesheet"/>
