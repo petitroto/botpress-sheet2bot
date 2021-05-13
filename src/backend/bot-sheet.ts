@@ -49,8 +49,8 @@ export class BotSheet {
       {name: 'qna', data: this.qnaRecords},
       {name: 'intent', data: this.intentRecords},
       {name: 'entity', data: this.entityRecords},
-      {name: 'text', data: this.textRecords},
-      {name: 'choice', data: this.choiceRecords},
+      {name: 'builtin_text', data: this.textRecords},
+      {name: 'builtin_single-choice', data: this.choiceRecords},
     ]
 
     const book = sheetDefs.reduce((memo, def) => {
