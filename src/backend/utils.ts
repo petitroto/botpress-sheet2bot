@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import {nanoid} from 'nanoid'
 
 export function* range(start, end) {
@@ -13,4 +14,11 @@ export function generateElementId(contentTypeId: string): string {
 
 export function flatMap<T, U>(array: T[], callbackfn: (value: T, index: number, array: T[]) => U[]): U[] {
   return Array.prototype.concat(...array.map(callbackfn));
+}
+
+export function mergeObjects(srcObjects, givenObjects, key) {
+  const srcOnlyObjects = _.differenceBy(srcObjects, givenObjects, key)
+  const conflictGivenObjects = _.intersectionBy(givenObjects, srcObjects, key)
+  const givenOnlyObjects = _.differenceBy(givenObjects, srcObjects, key)
+  return [...srcOnlyObjects, ...conflictGivenObjects, ...givenOnlyObjects]
 }

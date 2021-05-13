@@ -6,6 +6,7 @@ import stream from 'stream'
 import tar from 'tar'
 
 import {botConfig} from './bot-config'
+import {mergeObjects} from './utils'
 
 export class BotArchive {
   dirs = [
@@ -48,7 +49,7 @@ export class BotArchive {
       const contentFile = contentFiles.find(file => file.name === baseFile.name)
       const newObjects = JSON.parse(String(contentFile.content))
       const baseObjects = JSON.parse(String(baseFile.content))
-      const mergedObjects = [...baseObjects, ...newObjects]
+      const mergedObjects = mergeObjects(baseObjects, newObjects, 'id')
       return {
         name: baseFile.name,
         content: JSON.stringify(mergedObjects)
