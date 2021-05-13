@@ -129,7 +129,7 @@ export class AppView extends React.Component<Props, State> {
         <div className="jumbotron">
           <div className="container">
             <h1>Sheet2Bot</h1>
-            <p>ExcelファイルからBotを作成できます。</p>
+            <p>Excelファイルでボットを作成・更新できます。</p>
           </div>
         </div>
         <main className="container">
@@ -149,10 +149,10 @@ export class AppView extends React.Component<Props, State> {
                 <input type="text"
                        className="form-control"
                        id="BotId"
-                       placeholder="yourBotId"
+                       placeholder="my_bot-1"
                        value={this.state.botId}
                        onChange={this.handleBotIdChange}/>
-                <p className="help-block">半角英数字のみで、空白や記号等は含められません。最低４文字必要です。<br/>
+                <p className="help-block">半角英数字のみで、空白や特殊文字は含められません。最低４文字必要です。<br/>
                   作成後にIDの変更はできませんので注意して命名してください。<br/>
                   Bot IDはURLに表示されるので、ボットの利用者の目に触れます。
                 </p>
@@ -162,7 +162,7 @@ export class AppView extends React.Component<Props, State> {
                   <input type="checkbox"
                          name="allowOverwrite"
                          checked={this.state.allowOverwrite}
-                         onChange={this.handleAllowOverwriteChange}/> allow Overwrite
+                         onChange={this.handleAllowOverwriteChange}/> 上書き更新を許可
                 </label>
                 <p className="help-block">これにチェックを入れると、指定したBot IDのボットが既に存在した場合に上書きされます。</p>
               </div>
@@ -183,10 +183,10 @@ export class AppView extends React.Component<Props, State> {
               </pre>
                 }
               </p>
-              <hr/>
-              <p>
-                <a href="/admin">管理パネルへ</a>
+              <p className="text-right">
+                <a href="/admin">Botpress管理パネルへ移動</a>
               </p>
+              <hr/>
             </form>
           </section>
           <footer className="pull-right text-muted">
