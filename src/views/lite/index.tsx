@@ -136,6 +136,7 @@ export class AppView extends React.Component<Props, State> {
           <section className="row marketing">
             <div className="col-md-6">
               <h3>インポート</h3>
+              <p><small>ボットシートをアップロードして、新規のボットを作成するか、既存のボットを上書きします。</small></p>
               <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="BotSheet">ボットシート <span className="text-danger">*</span></label>
@@ -177,6 +178,7 @@ export class AppView extends React.Component<Props, State> {
 
             <div className="col-md-6">
               <h3>エクスポート</h3>
+              <p><small>既存のボットのコンテンツを、ボットシート形式でダウンロードします。</small></p>
               <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
