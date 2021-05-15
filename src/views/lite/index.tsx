@@ -172,7 +172,7 @@ export class AppView extends React.Component<Props, State> {
                   </p>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
+                  <label htmlFor="BotId">インポート先のBot Id <span className="text-danger">*</span></label>
                   <input type="text"
                          className="form-control"
                          id="BotId"
@@ -204,7 +204,7 @@ export class AppView extends React.Component<Props, State> {
               <p><small>既存のボットのコンテンツを、ボットシート形式でダウンロードします。</small></p>
               <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="BotId">Bot Id <span className="text-danger">*</span></label>
+                  <label htmlFor="BotId">エクスポートするBot Id <span className="text-danger">*</span></label>
                   <input type="text"
                          className="form-control"
                          id="BotIdForExport"
