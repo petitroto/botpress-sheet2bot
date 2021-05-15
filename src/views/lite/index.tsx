@@ -117,7 +117,7 @@ export class AppView extends React.Component<Props, State> {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="https://chatbot.today/botpress-heartkit">HeartKit for Botpress</a>
+              <a className="navbar-left" href="https://chatbot.today/botpress-heartkit"><img src="/assets/modules/sheet2bot/heartkit-logo.png" height="50"/></a>
             </div>
             <div id="navbar" className="navbar-collapse collapse">
               <div className="navbar-form navbar-right">
