@@ -48,7 +48,7 @@ export class AppView extends React.Component<Props, State> {
   }
 
   handleBotIdChange(event) {
-    this.setState({botId: event.target.value})
+    this.setState({botId: event.target.value.trim()})
   }
 
   handleAllowOverwriteChange(event) {
@@ -61,7 +61,20 @@ export class AppView extends React.Component<Props, State> {
       baseURL: getBaseURL(this.state.botId),
       responseType: 'blob' as ResponseType
     }
-    const res = await this.props.bp.axios.get('/export', axiosConfig)
+    const status = new Status('export', this.state.botId)
+    let res
+    try {
+      res = await this.props.bp.axios.get('/export', axiosConfig)
+      const statusName = '200'
+      const {messageType, messageText} = status.getMessage(statusName)
+      this.setState({messageType, messageText})
+    } catch (err) {
+      const statusName = err.response ? String(err.response.status) : 'Other'
+      const {messageType, messageText} = status.getMessage(statusName)
+      this.setState({messageType, messageText})
+      return
+    }
+
     const mineType = res.headers['content-type']
     const contentDisposition = res.headers['content-disposition']
 
@@ -86,6 +99,8 @@ export class AppView extends React.Component<Props, State> {
       baseURL: getBaseURL(),
       headers: {'content-type': 'multipart/form-data'}
     }
+    const status = new Status('import', this.state.botId)
+
     const form = new FormData()
     const file = this.fileInput.current.files[0]
     form.append('file', file)
@@ -93,13 +108,13 @@ export class AppView extends React.Component<Props, State> {
     form.append('allowOverwrite', String(this.state.allowOverwrite))
 
     try {
-      const res = await this.props.bp.axios.post('/import', form, axiosConfig)
+      await this.props.bp.axios.post('/import', form, axiosConfig)
       const statusName = '200'
-      const {messageType, messageText} = new Status(res.data.botId).getMessage(statusName)
+      const {messageType, messageText} = status.getMessage(statusName)
       this.setState({messageType, messageText})
     } catch (err) {
       const statusName = err.response ? String(err.response.status) : 'Other'
-      const {messageType, messageText} = new Status(this.state.botId).getMessage(statusName)
+      const {messageType, messageText} = status.getMessage(statusName)
       this.setState({messageType, messageText})
     }
   }
@@ -113,9 +128,9 @@ export class AppView extends React.Component<Props, State> {
               <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                       aria-expanded="false" aria-controls="navbar">
                 <span className="sr-only">Toggle navigation</span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
+                <span className="icon-bar"/>
+                <span className="icon-bar"/>
+                <span className="icon-bar"/>
               </button>
               <a className="navbar-left" href="https://chatbot.today/botpress-heartkit"><img
                 src="/assets/modules/sheet2bot/heartkit-logo.png" height="50"/></a>
@@ -199,6 +214,7 @@ export class AppView extends React.Component<Props, State> {
                 </div>
                 <p>
                   <button type="button" className="btn btn-success"
+                          disabled={!this.state.botId}
                           onClick={this.handleExport}>
                     エクスポート
                   </button>
