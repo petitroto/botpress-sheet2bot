@@ -117,24 +117,32 @@ export class AppView extends React.Component<Props, State> {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-left" href="https://chatbot.today/botpress-heartkit"><img src="/assets/modules/sheet2bot/heartkit-logo.png" height="50"/></a>
+              <a className="navbar-left" href="https://chatbot.today/botpress-heartkit"><img
+                src="/assets/modules/sheet2bot/heartkit-logo.png" height="50"/></a>
             </div>
             <div id="navbar" className="navbar-collapse collapse">
               <div className="navbar-form navbar-right">
-                <a href="https://chatbot.today/botpress-heartkit" type="submit" className="btn btn-success">公式サイトへ</a>
+                <a href="https://chatbot.today/botpress-heartkit" type="submit" className="btn btn-primary">公式サイトへ</a>
               </div>
             </div>
           </div>
         </nav>
-        <div className="jumbotron">
-          <div className="container">
-            <h1>Sheet2Bot</h1>
-            <p>Excelファイルでボットを作成・更新できます。</p>
-          </div>
-        </div>
         <main className="container">
-          <section className="row marketing">
-            <div className="col-md-6">
+          <section className="page-header">
+            <h1>Sheet2Bot</h1>
+            <p className="lead">Excelファイルでボットを作成・更新できます。</p>
+          </section>
+          <section className="row">
+            <div className="col-sm-12">
+              <p>
+                {
+                  this.state.messageType &&
+                  <pre className={`alert alert-${this.state.messageType}`}
+                       role="alert">{this.state.messageText}</pre>
+                }
+              </p>
+            </div>
+            <div className="col-sm-6">
               <h3>インポート</h3>
               <p><small>ボットシートをアップロードして、新規のボットを作成するか、既存のボットを上書きします。</small></p>
               <form onSubmit={this.handleSubmit}>
@@ -176,7 +184,7 @@ export class AppView extends React.Component<Props, State> {
               </form>
             </div>
 
-            <div className="col-md-6">
+            <div className="col-sm-6">
               <h3>エクスポート</h3>
               <p><small>既存のボットのコンテンツを、ボットシート形式でダウンロードします。</small></p>
               <form onSubmit={this.handleSubmit}>
@@ -198,14 +206,7 @@ export class AppView extends React.Component<Props, State> {
               </form>
             </div>
 
-            <div className="col-md-12">
-              <p>
-                {
-                  this.state.messageType &&
-                  <pre className={`alert alert-${this.state.messageType}`}
-                       role="alert">{this.state.messageText}</pre>
-                }
-              </p>
+            <div className="col-sm-12">
               <p className="text-right">
                 <a href="/admin">Botpress管理パネルへ移動</a>
               </p>
