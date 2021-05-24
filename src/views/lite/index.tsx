@@ -1,5 +1,7 @@
 import {AxiosInstance, ResponseType} from 'axios'
+import * as sdk from 'botpress/sdk'
 import React from 'react'
+import Select from 'react-select'
 import {Status} from './status'
 
 interface State {
@@ -8,6 +10,8 @@ interface State {
   allowOverwrite: boolean
   messageType: string
   messageText: string
+  templates: sdk.BotTemplate[]
+  selectedTemplate?: sdk.BotTemplate
 }
 
 interface Props {
@@ -29,6 +33,8 @@ export class AppView extends React.Component<Props, State> {
       allowOverwrite: false,
       messageType: '',
       messageText: '',
+      templates: [],
+      selectedTemplate: undefined
     }
     this.fileInput = React.createRef()
 
@@ -37,6 +43,15 @@ export class AppView extends React.Component<Props, State> {
     this.handleAllowOverwriteChange = this.handleAllowOverwriteChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleExport = this.handleExport.bind(this)
+  }
+
+  async componentDidMount() {
+    const url = '/api/v1/bots/___/mod/sheet2bot/listBotTemplate'
+    const res = await this.props.bp.axios.get(url)
+    this.setState({
+      templates: res.data.templates,
+      selectedTemplate: res.data.templates.find(template => template.id === 'qna-with-fallback')
+    })
   }
 
   handleFileChange(event) {
@@ -105,6 +120,8 @@ export class AppView extends React.Component<Props, State> {
     const file = this.fileInput.current.files[0]
     form.append('file', file)
     form.append('botId', this.state.botId)
+    form.append('templateId', this.state.selectedTemplate.id)
+    form.append('templateModuleId', this.state.selectedTemplate.moduleId)
     form.append('allowOverwrite', String(this.state.allowOverwrite))
 
     try {
@@ -180,6 +197,17 @@ export class AppView extends React.Component<Props, State> {
                          value={this.state.botId}
                          onChange={this.handleBotIdChange}/>
                   <p className="help-block">半角英数字のみで、空白や特殊文字は含められません。最低４文字必要です。</p>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="BotTemplate">使用するボットテンプレート <span className="text-danger">*</span></label>
+                  <Select
+                    options={this.state.templates}
+                    value={this.state.selectedTemplate}
+                    onChange={selectedTemplate => this.setState({selectedTemplate: selectedTemplate as any})}
+                    getOptionLabel={o => o.name}
+                    getOptionValue={o => o.id}
+                  />
+                  <p className="help-block">新規作成するボットの元になるテンプレートを選択します。（空っぽのボットにインポートしたい場合はEmpty Botを選択してください）</p>
                 </div>
                 <div className="checkbox">
                   <label>

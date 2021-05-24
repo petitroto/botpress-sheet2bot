@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "nanoid": "^3.1.22",
+    "react-select": "^4.3.1",
     "xlsx": "^0.16.9"
   }
 }

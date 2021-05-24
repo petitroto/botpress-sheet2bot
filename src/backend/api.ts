@@ -1,4 +1,6 @@
+import axios from 'axios'
 import * as sdk from 'botpress/sdk'
+import {BPRequest} from 'common/http'
 import multer from 'multer'
 import path from 'path'
 
@@ -29,6 +31,8 @@ export default async (bp: typeof sdk) => {
     async (req, res) => {
       const allowOverwrite = req.body.allowOverwrite === 'true'
       const botId = req.body.botId
+      const templateId = req.body.templateId
+      const templateModuleId = req.body.templateModuleId
 
       // 各種エラーチェック
       if (!botId) {
@@ -53,7 +57,7 @@ export default async (bp: typeof sdk) => {
       const contentFiles = botContent.toContentFiles()
 
       // テンプレートの読み込み
-      const templateFiles = await bp.bots.getBotTemplate('sheet2bot', 'qna-with-fallback')
+      const templateFiles = await bp.bots.getBotTemplate(templateModuleId, templateId)
 
       // ボットアーカイブを生成
       const botArchive = new BotArchive(destBasePath)
@@ -87,6 +91,22 @@ export default async (bp: typeof sdk) => {
         'Content-Length': xlsxFileBuffer.length
       })
       res.end(xlsxFileBuffer)
+    }
+  )
+
+  router.get(
+    '/listBotTemplate',
+    async (req: BPRequest, res) => {
+
+      const {data} = await axios.get('/admin/workspace/bots/templates', {
+        baseURL: `${process.LOCAL_URL}/api/v1`,
+        headers: {
+          Authorization: req.headers.authorization,
+          'X-BP-Workspace': req.workspace
+        }
+      })
+
+      res.status(200).json({templates: data})
     }
   )
 
