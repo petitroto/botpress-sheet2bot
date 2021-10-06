@@ -13,11 +13,11 @@
    */
   const replyQnaChoices = async (question, text, placeholder, other, typing) => {
     // QnAモジュールのREST APIを使って、questionを含むQnAを抽出する
-    const path = `/mod/qna/questions`
+    const path = `qna/questions`
     const axiosConfig = await bp.http.getAxiosConfigForBot(event.botId)
     const { data } = await axios.get(path, {
       ...axiosConfig,
-      params: { question }
+      params: { question, limit: 100, offset: 0 }
     })
     const questions = data.items.map(item => item.data.questions.ja[0])
 
