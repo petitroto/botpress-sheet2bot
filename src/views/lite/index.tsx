@@ -199,7 +199,20 @@ export class AppView extends React.Component<Props, State> {
                   <p className="help-block">半角英数字のみで、空白や特殊文字は含められません。最低４文字必要です。</p>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="BotTemplate">使用するボットテンプレート <span className="text-danger">*</span></label>
+                  <label htmlFor="allowOverwrite">上書き更新</label>
+                  <div className="checkbox" id="allowOverwrite">
+                    <label>
+                      <input type="checkbox"
+                             name="allowOverwrite"
+                             checked={this.state.allowOverwrite}
+                             onChange={this.handleAllowOverwriteChange}/> 上書き更新を許可
+                    </label>
+                    <p className="help-block">チェックを入れると、指定したBot
+                      IDのボットが既に存在した場合に上書きされます。（インポート内容のコンテンツ以外は、既存のボットの内容が残ります）</p>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="BotTemplate">使用するボットテンプレート（既存ボットが存在しない場合） <span className="text-danger">*</span></label>
                   <Select
                     options={this.state.templates}
                     value={this.state.selectedTemplate}
@@ -208,15 +221,6 @@ export class AppView extends React.Component<Props, State> {
                     getOptionValue={o => o.id}
                   />
                   <p className="help-block">新規作成するボットの元になるテンプレートを選択します。（空っぽのボットにインポートしたい場合はEmpty Botを選択してください）</p>
-                </div>
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox"
-                           name="allowOverwrite"
-                           checked={this.state.allowOverwrite}
-                           onChange={this.handleAllowOverwriteChange}/> 上書き更新を許可
-                  </label>
-                  <p className="help-block">チェックを入れると、指定したBot IDのボットが既に存在した場合に上書きされます。</p>
                 </div>
                 <p>
                   <button type="submit" className="btn btn-success"

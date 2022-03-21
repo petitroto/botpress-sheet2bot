@@ -29,7 +29,7 @@ export default async (bp: typeof sdk) => {
     '/import',
     upload.single('file'),
     async (req, res) => {
-      const allowOverwrite = req.body.allowOverwrite === 'true'
+      const overwriteExistingBot = req.body.allowOverwrite === 'true'
       const botId = req.body.botId
       const templateId = req.body.templateId
       const templateModuleId = req.body.templateModuleId
@@ -39,7 +39,7 @@ export default async (bp: typeof sdk) => {
         return res.status(400).json({botId, message: 'botId is missing'})
       }
       const existingBot = await bp.bots.getBotById(botId)
-      if (!allowOverwrite && existingBot) {
+      if (!overwriteExistingBot && existingBot) {
         return res.status(409).json({botId, message: 'Requested botId already exists'})
       }
       if (req.file.mimetype !== mimeTypeOfXlsx) {
@@ -56,16 +56,23 @@ export default async (bp: typeof sdk) => {
       const botContent = BotContent.fromBotSheet(botSheet)
       const contentFiles = botContent.toContentFiles()
 
-      // テンプレートの読み込み
-      const templateFiles = await bp.bots.getBotTemplate(templateModuleId, templateId)
+      // ベースにするボットアーカイブを取得（既存ボット or テンプレート）
+      const baseFiles = await (async () => {
+        if (overwriteExistingBot) {
+          const existingBotArchive = await bp.bots.exportBot(botId)
+          return BotArchive.convertTgzToFileContents(existingBotArchive)
+        } else {
+          return bp.bots.getBotTemplate(templateModuleId, templateId)
+        }
+      })()
 
       // ボットアーカイブを生成
       const botArchive = new BotArchive(destBasePath)
-      const archive: Buffer = await botArchive.build(templateFiles, contentFiles)
+      const archive: Buffer = await botArchive.build(baseFiles, contentFiles, overwriteExistingBot)
 
       // インポート
       try {
-        await bp.bots.importBot(botId, archive, 'default', allowOverwrite)
+        await bp.bots.importBot(botId, archive, 'default', overwriteExistingBot)
         res.status(200).json({botId, message: 'Imported successfully'})
       } catch (err) {
         res.status(500).json({botId, message: 'Failed to import'})

@@ -35,7 +35,7 @@ export class BotArchive {
     this.pathToArchive = path.join(destBasePath, `bot-from-sheet-${Date.now()}`)
   }
 
-  build(baseFiles: sdk.FileContent[], contentFiles: sdk.FileContent[]): Promise<Buffer> {
+  build(baseFiles: sdk.FileContent[], contentFiles: sdk.FileContent[], overwriteExistingBot: Boolean): Promise<Buffer> {
     const newFiles = _.differenceBy(contentFiles, baseFiles, 'name')
     const noConflictFiles = _.differenceBy(baseFiles, contentFiles, 'name')
     const conflictBaseFiles = _.intersectionBy(baseFiles, contentFiles, 'name')
@@ -56,12 +56,15 @@ export class BotArchive {
       }
     })
 
-    const otherFiles = [
-      {
+    const otherFiles = []
+
+    // ベースファイルが既存ボットではなくテンプレートの場合は、bot.config.jsonを新たに生成
+    if (!overwriteExistingBot) {
+      otherFiles.push({
         name: 'bot.config.json',
         content: JSON.stringify(botConfig)
-      }
-    ]
+      })
+    }
 
     const allFiles = [...noConflictFiles, ...mergedFiles, ...newFiles, ...otherFiles]
 
@@ -102,6 +105,33 @@ export class BotArchive {
       readStream.on('error', error => {
         reject(error)
       })
+    })
+  }
+
+  public static convertTgzToFileContents(tgz: Buffer): Promise<sdk.FileContent[]> {
+
+    return new Promise((resolve, reject) => {
+      const fileContents: sdk.FileContent[] = []
+      const writableStream = tar.list(
+        {
+          onentry: entry => {
+            const found = fileContents.find(obj => obj.name === String(entry.path))
+            const fileContent: sdk.FileContent = found || {
+              name: String(entry.path),
+              content: new Buffer(0)
+            }
+            if (!found) {
+              fileContents.push(fileContent)
+            }
+            entry.on('data', c => {
+              fileContent.content = Buffer.concat([fileContent.content, c])
+              resolve(fileContents)
+            })
+          }
+        }
+      )
+      // @ts-ignore
+      stream.Readable.from(tgz).pipe(writableStream)
     })
   }
 }
