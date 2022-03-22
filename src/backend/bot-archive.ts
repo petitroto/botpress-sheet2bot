@@ -58,12 +58,19 @@ export class BotArchive {
 
     const otherFiles = []
 
-    // ベースファイルが既存ボットではなくテンプレートの場合は、bot.config.jsonを新たに生成
     if (!overwriteExistingBot) {
+      // ベースファイルが既存ボットではなくテンプレートの場合は、bot.config.jsonを新たに生成
       otherFiles.push({
         name: 'bot.config.json',
         content: JSON.stringify(botConfig)
       })
+    } else {
+      // ベースファイルが既存ボットの場合は、ボットの名前の末尾の「 (botId)」を削除
+      // ※上書きインポートするたびにボット名が伸びていく問題の対策
+      const botConfigFC = noConflictFiles.find(file => file.name === 'bot.config.json')
+      const botConfigContent = JSON.parse(botConfigFC.content.toString())
+      botConfigContent.name = botConfigContent.name.replace(/ \([^()]+\)$/, '')
+      botConfigFC.content = JSON.stringify(botConfigContent)
     }
 
     const allFiles = [...noConflictFiles, ...mergedFiles, ...newFiles, ...otherFiles]
