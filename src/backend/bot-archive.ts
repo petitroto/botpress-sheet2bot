@@ -125,13 +125,16 @@ export class BotArchive {
             }
             entry.on('data', c => {
               fileContent.content = Buffer.concat([fileContent.content, c])
-              resolve(fileContents)
             })
           }
         }
       )
+      // アーカイブファイルをtar.listに流し込む
       // @ts-ignore
-      stream.Readable.from(tgz).pipe(writableStream)
+      const readStream = stream.Readable.from(tgz)
+      readStream.pipe(writableStream)
+      readStream.on('error', error => reject(error))
+      readStream.on('end', () => resolve(fileContents))
     })
   }
 }
